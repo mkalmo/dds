@@ -1,0 +1,25 @@
+@page {
+    margin: 1rem;
+    size: a4 landscape;
+}
+
+.grid-table {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 10rem 10rem 10rem;
+    grid-template-rows: 10rem 10rem 10rem;
+    break-before: page;
+}
+
+.grid-table div {
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.hand {
+    font-family: "Ubuntu Mono";
+    border: none;
+}

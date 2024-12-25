@@ -1,6 +1,7 @@
-const { Board, nextPlays, textToRank, compareCards } = require('./Board.js');
+const { nextPlays, textToRank,
+        compareCards, formatTrick } = require('./functions.js');
+const Board = require('./Board.js');
 const _ = require('underscore');
-const {assertSourceType} = require("@babel/core/lib/config/validation/option-assertions");
 
 //const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 const pbn = 'S:AQ.2.. 94.4.. 67.A.. KJ.3..';
@@ -21,6 +22,6 @@ while (!board.isCompleted()) {
 // console.log(board.tricks);
 
 for (const trick of board.tricks) {
-    console.log(trick.winner, trick.plays);
+    console.log(formatTrick(trick));
 }
 
