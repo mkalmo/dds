@@ -17,9 +17,9 @@
 
 <script type="module">
 
-    const transform = code => Babel.transform(code, {
+    const transform = (filename, code) => Babel.transform(code, {
             presets: ['react', 'typescript'],
-            filename: "example.tsx",
+            filename: filename,
             plugins: ['transform-modules-systemjs'],
         }).code;
 
@@ -29,14 +29,14 @@
     System.constructor.prototype.fetch = async url => {
         // console.log('args: ', args);
 
-        const extension = url.split('.').pop();
-        if (extension !== 'tsx') {
+        const filename = url.split('/').pop();
+        if (! filename.endsWith('.tsx')) {
             return fetch(url);
         }
 
         const response = await fetch(url);
 
-        const code = transform(await response.text());
+        const code = transform(filename, await response.text());
 
         const modifiedResponse = new Response(code, {
             status: response.status,
