@@ -1,9 +1,11 @@
-function generateBridgeHand(targetHCP) {
-    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-    const suits = ['C', 'D', 'H', 'S'];
-    const hcpMap = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
+// @ts-ignore
+import Hand from "../comp/Hand.ts";
 
-    // Generate the full deck
+const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+const suits = ['C', 'D', 'H', 'S'];
+const hcpMap: any = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
+
+function getDeck() {
     const deck = [];
     for (let suit of suits) {
         for (let rank of ranks) {
@@ -11,17 +13,22 @@ function generateBridgeHand(targetHCP) {
         }
     }
 
-    // Helper: Shuffle array
-    function shuffle(array) {
+    function shuffle(array: string[]) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
 
+    shuffle(deck);
+
+    return deck;
+}
+
+function generateBridgeHand(targetHCP: number, deck: string[]) {
     // Separate HCP and non-HCP cards
-    function splitDeck(deck) {
-        const hcpCards = [];
+    function splitDeck(deck: string[]) {
+        const hcpCards: string[] = [];
         const nonHCP = [];
         for (let card of deck) {
             const rank = card.slice(0, -1);
@@ -35,7 +42,9 @@ function generateBridgeHand(targetHCP) {
     }
 
     // Backtracking approach to find a combination matching the target HCP
-    function findHCPCombination(cards, target, index = 0, current = [], currentHCP = 0) {
+    function findHCPCombination(
+            cards: string[], target: number, index = 0, current: string[] = [], currentHCP = 0) {
+
         if (currentHCP === target) return current; // Exact match
         if (currentHCP > target || index >= cards.length) return null; // Exceeded or no cards left
 
@@ -44,7 +53,9 @@ function generateBridgeHand(targetHCP) {
         const hcp = hcpMap[rank] || 0;
 
         // Include this card in the hand
-        const withCard = findHCPCombination(cards, target, index + 1, [...current, card], currentHCP + hcp);
+        const withCard: string[] =
+            findHCPCombination(cards, target, index + 1, [...current, card], currentHCP + hcp);
+
         if (withCard) return withCard;
 
         // Skip this card
@@ -52,7 +63,6 @@ function generateBridgeHand(targetHCP) {
     }
 
     // Main hand generation
-    shuffle(deck);
     const { hcpCards, nonHCP } = splitDeck(deck);
 
     // Find the exact HCP combination
@@ -62,14 +72,28 @@ function generateBridgeHand(targetHCP) {
         throw new Error(`Cannot generate a hand with exactly ${targetHCP} HCP.`);
     }
 
-    // Shuffle and pick remaining cards
-    shuffle(nonHCP);
     const randomCards = nonHCP.slice(0, 13 - selectedHCP.length);
 
     // Combine selected HCP cards with random cards
     return selectedHCP.concat(randomCards);
 }
 
-// Example: Generate a hand with 16 HCP
-const hand = generateBridgeHand(10);
-console.log("Hand:", hand);
+export default function generateHands(nPoints: number, sPoints: number): Hand[] {
+
+    let deck = getDeck();
+
+    const nHand = generateBridgeHand(nPoints, deck);
+
+    deck = deck.filter(card => !nHand.includes(card));
+
+    const sHand = generateBridgeHand(sPoints, deck);
+
+    deck = deck.filter(card => !sHand.includes(card));
+
+    const eHand = deck.slice(0, 13);
+
+    const wHand = deck.slice(13, 26);
+
+    return [nHand, eHand, sHand, wHand].map(e => new Hand(e));
+}
+

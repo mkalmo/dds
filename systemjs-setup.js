@@ -11,7 +11,7 @@ System.constructor.prototype.fetch = async url => {
     // console.log('args: ', args);
 
     const filename = url.split('/').pop();
-    if (! filename.endsWith('.tsx')) {
+    if (!filename.endsWith('.tsx') && !filename.endsWith('.ts')) {
         return fetch(url);
     }
 

@@ -209,9 +209,11 @@ class Board {
     toPBN() {
         var player = this.player;
         var holdings = [];
-        for (var i = 0; i < 4; i++) {
-            var hand = this.cards[player];
-            holdings.push(['S', 'H', 'D', 'C'].map(suit => hand[suit].map(rankToText).join('')).join('.'));
+        for (let i = 0; i < 4; i++) {
+            const hand = this.cards[player];
+            holdings.push(['S', 'H', 'D', 'C']
+                .map(suit => hand[suit]
+                    .map(rankToText).join('')).join('.'));
             player = NEXT_PLAYER[player];
         }
         return this.player + ':' + holdings.join(' ');

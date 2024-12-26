@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "types" : ["node"],
+    "target": "es6",
+    "lib": [
+      "es2021"
+    ],
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "allowJs": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  }
+}
