@@ -6,6 +6,11 @@ const _solveBoard = Module.cwrap('solve',
     'string',
     ['string', 'string', 'number', 'number']);
 
+const _calcDDTable = Module.cwrap('generateDDTable', 'string', ['string']);
+
+function calcDDTable(board) {
+    return JSON.parse(_calcDDTable(board));
+}
 
 function packPlays(plays) {
     const suits = {'S': 0, 'H': 1, 'D': 2, 'C': 3};
@@ -62,19 +67,19 @@ function formatTrick(trick) {
 }
 
 function parsePBNStrings(pbn) {
-    var parts = pbn.split(' ');
+    const parts = pbn.split(' ');
     if (parts.length !== 4) {
         throw 'PBN must have four hands (got ' + parts.length + ')';
     }
 
-    var m = parts[0].match(/^([NSEW]):/);
+    const m = parts[0].match(/^([NSEW]):/);
     if (!m) {
         throw 'PBN must start with either "N:", "S:", "E:" or "W:"';
     }
     parts[0] = parts[0].slice(2);
-    var player = m[1];
-    var hands = {};
-    parts.forEach((txt, i) => {
+    let player = m[1];
+    const hands = {};
+    parts.forEach(txt => {
         hands[player] = txt;
         player = NEXT_PLAYER[player];
     });
@@ -82,13 +87,13 @@ function parsePBNStrings(pbn) {
 }
 
 function parsePBN(pbn) {
-    var textHands = parsePBNStrings(pbn);
+    const textHands = parsePBNStrings(pbn);
 
-    var deal = {};
+    const deal = {};
     _.each(textHands, (txt, player) => {
         deal[player] = {};
-        var suits = txt.split('.');
-        if (suits.length != 4) {
+        const suits = txt.split('.');
+        if (suits.length !== 4) {
             throw `${player} must have four suits, got ${suits.length}: ${txt}`;
         }
         suits.forEach((holding, idx) => {
@@ -117,12 +122,11 @@ function compareCards(a, b) {
 }
 
 module.exports = {
-    nextPlays,
     textToRank,
     compareCards,
-    formatCard,
     parsePBN,
     nextPlays,
     formatCard,
+    calcDDTable,
     formatTrick
 };

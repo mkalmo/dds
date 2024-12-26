@@ -33,15 +33,15 @@ class Board {
 
     // Play a card
     play(player, suit, rank) {
-        if (player != this.player) {
+        if (player !== this.player) {
             throw 'Played out of turn';
         }
-        var holding = this.cards[player][suit];
-        var idx = holding.indexOf(rank);
-        if (idx == -1) {
+        const holding = this.cards[player][suit];
+        const idx = holding.indexOf(rank);
+        if (idx === -1) {
             throw `${player} tried to play ${rank} ${suit} which was not in hand.`;
         }
-        var legalPlays = this.legalPlays();
+        const legalPlays = this.legalPlays();
         if (!_.find(legalPlays, {player, suit, rank})) {
             throw `${suit} ${rank} by ${player} does not follow suit.`;
         }
@@ -94,13 +94,13 @@ class Board {
     legalPlays() {
         var player = this.player;
         var followSuit = this.plays.length ? this.plays[0].suit : null;
-        if (followSuit && this.cards[player][followSuit].length == 0) {
+        if (followSuit && this.cards[player][followSuit].length === 0) {
             followSuit = null;
         }
 
         var cards = this.cardsForPlayer(player);
         if (followSuit) {
-            cards = cards.filter(({suit}) => suit == followSuit);
+            cards = cards.filter(({suit}) => suit === followSuit);
         }
         return cards.map(({suit, rank}) => ({player, suit, rank}));
     }
@@ -127,8 +127,8 @@ class Board {
         var prevTricks = this.tricks.length,
             plays = this.plays.length;
 
-        if (plays == 0) {
-            if (prevTricks == 0) {
+        if (plays === 0) {
+            if (prevTricks === 0) {
                 throw 'Cannot undo play when no plays have occurred.';
             } else {
                 prevTricks -= 1;
@@ -145,11 +145,11 @@ class Board {
     // playNum \in 0..3
     undoToPlay(trickNum, playNum) {
         // gather all the cards that have been played
-        var cards = _.flatten(this.tricks.map(trick => trick.plays));
+        let cards = _.flatten(this.tricks.map(trick => trick.plays));
         cards = cards.concat(this.plays);
 
         // restore cards to hands
-        for (var {player, suit, rank} of cards) {
+        for (let {player, suit, rank} of cards) {
             this.cards[player][suit].push(rank);
         }
         this.sortHands();
