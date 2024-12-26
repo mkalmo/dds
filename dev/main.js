@@ -1,6 +1,6 @@
 const { nextPlays, textToRank,
-        compareCards, formatTrick } = require('./functions.js');
-const Board = require('./Board.js');
+        compareCards, formatTrick } = require('../functions.js');
+const Board = require('../Board.js');
 const _ = require('underscore');
 
 //const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';

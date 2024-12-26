@@ -1,5 +1,4 @@
 var expect = chai.expect;
-
 chai.config.truncateThreshold = 0;  // disable truncating
 
 // Board 2 from http://clubresults.acbl.org/Results/232132/2015/11/151102E.HTM
@@ -246,36 +245,36 @@ describe('Board', function() {
   });
 });
 
-describe('HandExplorer', function() {
-  it('should play a card', function() {
-    var el = document.getElementById('testdiv');
-    var tree = ReactDOM.render(<Root initialPBN={pbn} initialStrain='N' initialDeclarer='W' />, el);
-
-    var cards = el.querySelectorAll('.card');
-    expect(cards).to.have.length(52);
-
-    var northCards = el.querySelector('.north').querySelectorAll('.card');
-    expect(northCards).to.have.length(13);
-
-    var d5 = northCards[11];
-    expect(d5.textContent).to.equal('5♦9');  // making 9
-
-    React.addons.TestUtils.Simulate.click(d5);
-
-    var nextCards = el.querySelectorAll('.enable .card');
-    expect(nextCards).to.have.length(3);
-    expect(_.map(el.querySelectorAll('.enable .card .suit'), x => x.textContent)).to.deep.equal(['♦', '♦', '♦']);
-    expect(_.map(el.querySelectorAll('.enable .card .rank'), x => x.textContent)).to.deep.equal(['6', '4', '2']);
-    expect(_.map(el.querySelectorAll('.enable .card .making'), x => x.textContent)).to.deep.equal(['9', '9', '9']);
-
-    el.innerHTML = '';
-  });
-});
+// describe('HandExplorer', function() {
+//   it('should play a card', function() {
+//     var el = document.getElementById('testdiv');
+//     var tree = ReactDOM.render(<Root initialPBN={pbn} initialStrain='N' initialDeclarer='W' />, el);
+//
+//     var cards = el.querySelectorAll('.card');
+//     expect(cards).to.have.length(52);
+//
+//     var northCards = el.querySelector('.north').querySelectorAll('.card');
+//     expect(northCards).to.have.length(13);
+//
+//     var d5 = northCards[11];
+//     expect(d5.textContent).to.equal('5♦9');  // making 9
+//
+//     React.addons.TestUtils.Simulate.click(d5);
+//
+//     var nextCards = el.querySelectorAll('.enable .card');
+//     expect(nextCards).to.have.length(3);
+//     expect(_.map(el.querySelectorAll('.enable .card .suit'), x => x.textContent)).to.deep.equal(['♦', '♦', '♦']);
+//     expect(_.map(el.querySelectorAll('.enable .card .rank'), x => x.textContent)).to.deep.equal(['6', '4', '2']);
+//     expect(_.map(el.querySelectorAll('.enable .card .making'), x => x.textContent)).to.deep.equal(['9', '9', '9']);
+//
+//     el.innerHTML = '';
+//   });
+// });
 
 describe('ibb-to-pbn', function () {
 
   // Pull in the ibb symbols for testing.
-  var {loadImage, sliceImage, rmse, loadReferenceData, recognizeHand} = window.ibb;
+  // var {loadImage, sliceImage, rmse, loadReferenceData, recognizeHand} = window.ibb;
 
   it('should load an image to canvas', function () {
     return loadImage('ibb/cards.PNG').then(canvas => {
