@@ -1,5 +1,6 @@
-// @ts-ignore
 import Hand from "../comp/Hand.ts";
+import { Player } from "../constants.ts";
+import Deal from "../comp/Deal.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
@@ -78,22 +79,26 @@ function generateBridgeHand(targetHCP: number, deck: string[]) {
     return selectedHCP.concat(randomCards);
 }
 
-export default function generateHands(nPoints: number, sPoints: number): Hand[] {
+export default function generateHands(nPoints: number, sPoints: number): Deal {
 
     let deck = getDeck();
 
-    const nHand = generateBridgeHand(nPoints, deck);
+    const nCards = generateBridgeHand(nPoints, deck);
 
-    deck = deck.filter(card => !nHand.includes(card));
+    deck = deck.filter(card => !nCards.includes(card));
 
-    const sHand = generateBridgeHand(sPoints, deck);
+    const sCards = generateBridgeHand(sPoints, deck);
 
-    deck = deck.filter(card => !sHand.includes(card));
+    deck = deck.filter(card => !sCards.includes(card));
 
-    const eHand = deck.slice(0, 13);
+    const eCards = deck.slice(0, 13);
 
-    const wHand = deck.slice(13, 26);
+    const wCards = deck.slice(13, 26);
 
-    return [nHand, eHand, sHand, wHand].map(e => new Hand(e));
+    return new Deal(
+        new Hand(Player.North, nCards),
+        new Hand(Player.East, eCards),
+        new Hand(Player.South, sCards),
+        new Hand(Player.West, wCards));
 }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-// @ts-ignore
 import Hand from "./Hand.ts";
 
 type Props = {

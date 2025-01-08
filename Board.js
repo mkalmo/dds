@@ -1,7 +1,7 @@
 const _ = require("underscore");
 
 const { parsePBN, nextPlays, formatCard } = require('./functions.js');
-const { NEXT_PLAYER } = require('./constants.js');
+const { NEXT_PLAYER } = require('./constants.ts');
 
 class Board {
     constructor(pbn, strain) {

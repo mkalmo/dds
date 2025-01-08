@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const Module = require('./out.js');
-const { NEXT_PLAYER, SUITS, SUIT_RANKS } = require('./constants.js');
+const { NEXT_PLAYER, SUITS, SUIT_RANKS } = require('./constants.ts');
 
 const _solveBoard = Module.cwrap('solve',
     'string',
