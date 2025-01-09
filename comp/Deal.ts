@@ -6,7 +6,7 @@ export default class Deal {
 
     private readonly playersToCards = new Map<Player, Card[]>();
 
-    constructor(hands: Hand[]) {
+    constructor(private declearer: Player) {
         for (const player of Players) {
             this.playersToCards.set(player, []);
         }
@@ -14,6 +14,10 @@ export default class Deal {
 
     addCard(player: Player, card: Card): void {
         this.playersToCards.get(player).push(card);
+    }
+
+    addCards(player: Player, cards: Card[]): void {
+        cards.forEach(c => this.playersToCards.get(player).push(c));
     }
 
     removeCard(player: Player, card: Card): void {
@@ -38,9 +42,16 @@ export default class Deal {
     toString(): string {
         let result = '';
         for (const player of Players) {
-            result += player + ': ' + this.playersToCards.get(player).join(', ') + '\n';
+            const cards = this.sort(this.playersToCards.get(player));
+            result += player + ': ' + cards.join(', ') + '\n';
         }
         return result;
+    }
+
+    private sort(cards: Card[]): Card[] {
+        const copy = [...cards];
+        copy.sort((a, b) => a.compareTo(b));
+        return copy;
     }
 
     toPBN(player: Player) {
@@ -68,9 +79,11 @@ export default class Deal {
     }
 
     static fromPBN(pbn: string): Deal {
+        const declearer = pbn.split(':')[0];
+
         const textHands = Deal.parsePBNStrings(pbn);
 
-        const deal = new Deal([]);
+        const deal = new Deal(Player.fromString(declearer));
         for (const [playerStr, holdingText] of textHands.entries()) {
             const player = Player.fromString(playerStr);
             const holdings = holdingText.split('.');
@@ -103,16 +116,8 @@ export default class Deal {
         return hands;
     }
 
-    textToRank(txt: string) {
-        if (txt.length !== 1) {
-            throw 'Invalid card symbol: ' + txt;
-        }
-        if (txt >= '2' && txt <= '9') return Number(txt);
-        if (txt === 'T') return 10;
-        if (txt === 'J') return 11;
-        if (txt === 'Q') return 12;
-        if (txt === 'K') return 13;
-        if (txt === 'A') return 14;
-        throw 'Invalid card symbol: ' + txt;
+    opener(): Player {
+        return Player.fromString(
+            NEXT_PLAYER.get(NEXT_PLAYER.get(NEXT_PLAYER.get(this.declearer))));
     }
 }

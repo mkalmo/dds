@@ -1,6 +1,8 @@
 import Hand from "../comp/Hand.ts";
 import { Player } from "../constants.ts";
 import Deal from "../comp/Deal.ts";
+import { calcDDTable } from "../functions.ts";
+import Card from "../comp/Card.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
@@ -26,7 +28,7 @@ function getDeck() {
     return deck;
 }
 
-function generateBridgeHand(targetHCP: number, deck: string[]) {
+function generateBridgeHand(targetHCP: number, deck: string[]): string[] {
     // Separate HCP and non-HCP cards
     function splitDeck(deck: string[]) {
         const hcpCards: string[] = [];
@@ -79,7 +81,7 @@ function generateBridgeHand(targetHCP: number, deck: string[]) {
     return selectedHCP.concat(randomCards);
 }
 
-export default function generateHands(nPoints: number, sPoints: number): Deal {
+export default function generateDeal(nPoints: number, sPoints: number): Deal {
 
     let deck = getDeck();
 
@@ -95,10 +97,24 @@ export default function generateHands(nPoints: number, sPoints: number): Deal {
 
     const wCards = deck.slice(13, 26);
 
-    return new Deal([
-        new Hand(Player.North, nCards),
-        new Hand(Player.East, eCards),
-        new Hand(Player.South, sCards),
-        new Hand(Player.West, wCards)]);
+    const deal = new Deal(Player.South);
+
+    deal.addCards(Player.North, nCards.map(c => Card.parse(c)));
+    deal.addCards(Player.East, eCards.map(c => Card.parse(c)));
+    deal.addCards(Player.South, sCards.map(c => Card.parse(c)));
+    deal.addCards(Player.West, wCards.map(c => Card.parse(c)));
+
+    return deal;
 }
 
+export function generateExercise() {
+
+    const deal = generateDeal(11, 14);
+
+    console.log(deal.toString());
+
+    // const result = calcDDTable(deal.toPBN(deal.opener()));
+    // console.log(result);
+
+
+}

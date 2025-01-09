@@ -2,7 +2,7 @@ import { Player } from "../constants.ts";
 
 export default class Hand {
 
-    constructor(private player: Player,
+    constructor(public player: Player,
                 private cards: string[]) {}
 
     getCardsOfSuit(suit: string): string[] {
