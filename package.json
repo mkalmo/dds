@@ -13,6 +13,7 @@
     "@babel/core": "^7.26.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@types/underscore": "^1.13.0",
     "babel-core": "^5",
     "chai": "^3.4.1",
     "http-server": "^0.8.5",

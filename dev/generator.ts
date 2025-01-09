@@ -95,10 +95,10 @@ export default function generateHands(nPoints: number, sPoints: number): Deal {
 
     const wCards = deck.slice(13, 26);
 
-    return new Deal(
+    return new Deal([
         new Hand(Player.North, nCards),
         new Hand(Player.East, eCards),
         new Hand(Player.South, sCards),
-        new Hand(Player.West, wCards));
+        new Hand(Player.West, wCards)]);
 }
 

@@ -1,10 +1,15 @@
 import React from 'react';
 import BoardComp from "./BoardComp.tsx";
-import generateHands from "../dev/generator.ts";
+import generateDeal from "../dev/generator.ts";
 
 const App = () => {
 
-    const deal = generateHands(9, 16);
+    // get deal
+    // calculate first play
+    // calculate trick count
+    // calculate trick list
+
+    const deal = generateDeal(9, 16);
 
     const data = [1];
 
