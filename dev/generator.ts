@@ -1,8 +1,9 @@
-import Hand from "../comp/Hand.ts";
 import { Player } from "../constants.ts";
 import Deal from "../comp/Deal.ts";
 import { calcDDTable } from "../functions.ts";
 import Card from "../comp/Card.ts";
+import { Board } from "../Board.ts";
+import Exercise from "../comp/Exercise.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
@@ -107,14 +108,32 @@ export default function generateDeal(nPoints: number, sPoints: number): Deal {
     return deal;
 }
 
-export function generateExercise() {
+export function generateExercise(): Exercise {
 
-    const deal = generateDeal(11, 14);
+    const pbn = 'W:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 
-    console.log(deal.toString());
+    // const deal = generateDeal(11, 14);
+    const deal = Deal.fromPBN(pbn);
 
-    // const result = calcDDTable(deal.toPBN(deal.opener()));
+    // console.log(deal.toString());
+
+    const result = calcDDTable(deal.toPBN(deal.opener));
+
     // console.log(result);
 
+    const strain = result.getBestStrain();
 
+    const board = new Board(pbn, strain);
+
+    while (!board.isCompleted()) {
+        const playsResult = board.nextPlays();
+
+        const card = playsResult.getCardToPlay();
+
+        board.play(playsResult.player, card);
+    }
+
+    return new Exercise(deal, strain, board.nsTricks, board.tricks);
+
+    //console.log(board.tricks.map(t => t.toString()).join("\n"));
 }

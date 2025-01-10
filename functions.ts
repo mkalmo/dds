@@ -1,10 +1,8 @@
-import _ from 'underscore';
-// const _ = require('underscore');
-// const Module = require('./out.js');
 // @ts-ignore
 import * as Module from './out.js';
 
-import { NEXT_PLAYER, SUITS, SUIT_RANKS, SUIT_RANKS1 } from './constants.ts';
+import { SUIT_RANKS1 } from './constants.ts';
+import DDTableResult from "./comp/DDTableResult.ts";
 
 const _solveBoard = Module.cwrap('solve',
     'string',
@@ -12,8 +10,10 @@ const _solveBoard = Module.cwrap('solve',
 
 const _calcDDTable = Module.cwrap('generateDDTable', 'string', ['string']);
 
-export function calcDDTable(pbn: string) {
-    return JSON.parse(_calcDDTable(pbn));
+export function calcDDTable(pbn: string): DDTableResult {
+    const raw = JSON.parse(_calcDDTable(pbn));
+
+    return DDTableResult.fromRaw(raw);
 }
 
 function packPlays(plays: string[]) {
@@ -61,15 +61,6 @@ export function textToRank(txt: string) {
 
 export function formatCard(card: any) {
     return rankToText(card.rank) + card.suit;
-}
-
-function formatTrick(trick: any) {
-    const parts = [];
-    for (const play of trick.plays) {
-        parts.push(formatCard(play));
-    }
-
-    return trick.leader + ' ' + parts.join(',') + ' ' + trick.winner;
 }
 
 export function rankToText(rank: number) {

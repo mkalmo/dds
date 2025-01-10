@@ -1,12 +1,11 @@
-import Hand from "./Hand.ts";
-import { NEXT_PLAYER, Player, Players, Suit, Suits, SUITS } from "../constants.ts";
+import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "../constants.ts";
 import Card from "./Card.ts";
 
 export default class Deal {
 
     private readonly playersToCards = new Map<Player, Card[]>();
 
-    constructor(private declearer: Player) {
+    constructor(public readonly opener: Player) {
         for (const player of Players) {
             this.playersToCards.set(player, []);
         }
@@ -79,11 +78,11 @@ export default class Deal {
     }
 
     static fromPBN(pbn: string): Deal {
-        const declearer = pbn.split(':')[0];
+        const opener = pbn.split(':')[0];
 
         const textHands = Deal.parsePBNStrings(pbn);
 
-        const deal = new Deal(Player.fromString(declearer));
+        const deal = new Deal(Player.fromString(opener));
         for (const [playerStr, holdingText] of textHands.entries()) {
             const player = Player.fromString(playerStr);
             const holdings = holdingText.split('.');
@@ -114,10 +113,5 @@ export default class Deal {
             player = NEXT_PLAYER.get(player);
         });
         return hands;
-    }
-
-    opener(): Player {
-        return Player.fromString(
-            NEXT_PLAYER.get(NEXT_PLAYER.get(NEXT_PLAYER.get(this.declearer))));
     }
 }

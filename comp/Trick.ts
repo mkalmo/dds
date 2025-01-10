@@ -1,4 +1,5 @@
 import { Play } from "./types.ts";
+import Card from "./Card.ts";
 
 export default class Trick {
 
@@ -20,13 +21,17 @@ export default class Trick {
             + this.winner();
     }
 
+    getLead(): Card {
+        return this.plays[0].card;
+    }
+
     public winner(): string {
         let topSuit = this.plays[0].card.suit,
-            topRank = this.plays[0].card.scalarRank(),
+            topRank = this.plays[0].card.scalarRank,
             winner = this.plays[0].player;
         for (let i = 1; i < 4; i++) {
             let suit = this.plays[i].card.suit,
-                rank = this.plays[i].card.scalarRank(),
+                rank = this.plays[i].card.scalarRank,
                 player = this.plays[i].player;
 
             if ((suit === topSuit && rank > topRank) ||

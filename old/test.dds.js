@@ -33,7 +33,7 @@ describe('Board', function() {
   it('should play a card', function() {
     var b = new Board(pbn, 'N');
     expect(b.ew_tricks).to.equal(0);
-    expect(b.ns_tricks).to.equal(0);
+    expect(b.nsTricks).to.equal(0);
     expect(b.getDeclarer()).to.equal('W');
     expect(b.strain).to.equal('N');
     expect(b.tricks).to.be.empty;
@@ -71,7 +71,7 @@ describe('Board', function() {
     b.play('W', 'D', 9);
 
     expect(b.ew_tricks).to.equal(0);
-    expect(b.ns_tricks).to.equal(1);
+    expect(b.nsTricks).to.equal(1);
     expect(b.plays).to.be.empty;
     expect(b.tricks).to.deep.equal([
       {
@@ -119,7 +119,7 @@ describe('Board', function() {
   it('should undo moves', function() {
     var b = new Board(pbn, 'N');
     expect(b.ew_tricks).to.equal(0);
-    expect(b.ns_tricks).to.equal(0);
+    expect(b.nsTricks).to.equal(0);
     expect(b.player).to.equal('N');
     expect(b.plays).to.have.length(0);
 
@@ -157,11 +157,11 @@ describe('Board', function() {
     b.play('S', 'D', 11);
 
     expect(b.ew_tricks).to.equal(0);
-    expect(b.ns_tricks).to.equal(1);
+    expect(b.nsTricks).to.equal(1);
 
     b.undoToPlay(0, 2);
     expect(b.ew_tricks).to.equal(0);
-    expect(b.ns_tricks).to.equal(0);
+    expect(b.nsTricks).to.equal(0);
     expect(b.plays).to.deep.equal([
       {player: 'N', suit: 'D', rank: 5},
       {player: 'E', suit: 'D', rank: 2}
@@ -216,7 +216,7 @@ describe('Board', function() {
     b.play('E', 'D', 2);
     b.play('S', 'D', 12);
     b.play('W', 'D', 7);
-    expect(b.ns_tricks).to.equal(1);
+    expect(b.nsTricks).to.equal(1);
     expect(b.tricks).to.have.length(1);
     expect(b.plays).to.have.length(0);
 

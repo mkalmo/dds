@@ -1,3 +1,5 @@
 import { generateExercise } from "./generator.ts";
 
-generateExercise();
+const ex = generateExercise();
+
+console.log(ex);

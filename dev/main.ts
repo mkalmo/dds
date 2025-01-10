@@ -1,6 +1,5 @@
-import { nextPlays, calcDDTable, textToRank, compareCards } from '../functions.ts';
+import { calcDDTable } from '../functions.ts';
 import { Board } from "../Board.ts";
-import _ from 'underscore';
 
 import NextPlaysResult from "../comp/NextPlaysResult.ts";
 // import Board from '../Board.js';
@@ -26,6 +25,6 @@ while (!board.isCompleted() && (c-- > 0)) {
     board.play(playsResult.player, card);
 }
 
-console.log(board.ns_tricks);
+console.log(board.nsTricks);
 
 console.log(board.tricks.map(t => t.toString()).join("\n"));

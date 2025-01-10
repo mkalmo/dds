@@ -1,6 +1,4 @@
-import _ from "underscore";
-
-import { nextPlays, formatCard, rankToText } from './functions.ts';
+import { nextPlays } from './functions.ts';
 import { NEXT_PLAYER, Player } from './constants.ts';
 import Deal from "./comp/Deal.ts";
 import NextPlaysResult from "./comp/NextPlaysResult.ts";
@@ -17,7 +15,7 @@ export class Board {
     private plays: Play[];
     public tricks: Trick[];
     public ew_tricks: number;
-    public ns_tricks: number;
+    public nsTricks: number;
 
     constructor(pbn: string, strain: string) {
         this.cards = Deal.fromPBN(pbn);  // remaining cards in hands
@@ -28,7 +26,7 @@ export class Board {
         this.plays = [];  // plays in this trick
         this.tricks = [];  // previous tricks. Array of CompleteTrick.
         this.ew_tricks = 0;
-        this.ns_tricks = 0;
+        this.nsTricks = 0;
     }
 
     leader() {
@@ -40,8 +38,6 @@ export class Board {
     }
 
     play(player: string, card: Card) {
-        console.log(card);
-
         this.cards.removeCard(Player.fromString(player), card);
 
         this.plays.push({ player, card });
@@ -62,7 +58,7 @@ export class Board {
         this.plays = [];
 
         if (winner === 'N' || winner === 'S') {
-            this.ns_tricks++;
+            this.nsTricks++;
         } else {
             this.ew_tricks++;
         }

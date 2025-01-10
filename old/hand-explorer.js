@@ -33,7 +33,7 @@ class Board {
   }
 
   isCompleted(): boolean {
-    return this.ew_tricks + this.ns_tricks == 13;
+    return this.ew_tricks + this.nsTricks == 13;
   }
 
   // Play a card
@@ -87,7 +87,7 @@ class Board {
     this.plays = [];
     this.player = winner;
     if (winner == 'N' || winner == 'S') {
-      this.ns_tricks++;
+      this.nsTricks++;
     } else {
       this.ew_tricks++;
     }
@@ -164,7 +164,7 @@ class Board {
     this.tricks = [];
     this.plays = [];
     this.ew_tricks = 0;
-    this.ns_tricks = 0;
+    this.nsTricks = 0;
     this.lastTrickPBN = this.toPBN();
 
     // replay until the appropriate point
@@ -713,9 +713,9 @@ class Explorer extends React.Component {
     })).map(({suit, rank, score}) => ({suit, rank: textToRank(rank), score}));
     makingPlays.forEach(play => {
       if (onSameTeam(player, board.getDeclarer())) {
-        play.score += (player == 'E' || player == 'W') ? board.ew_tricks : board.ns_tricks;
+        play.score += (player == 'E' || player == 'W') ? board.ew_tricks : board.nsTricks;
       } else {
-        play.score += (player == 'E' || player == 'W') ? board.ew_tricks : board.ns_tricks;
+        play.score += (player == 'E' || player == 'W') ? board.ew_tricks : board.nsTricks;
         play.score = 13 - play.score;
       }
     });

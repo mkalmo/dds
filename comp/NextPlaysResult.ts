@@ -17,7 +17,7 @@ export default class NextPlaysResult {
     public readonly player: string;
     private readonly plays: Play[];
 
-    static fromRaw(raw: any) {
+    static fromRaw(raw: any): NextPlaysResult {
         const typed = raw as NextPlaysStruct;
         return new NextPlaysResult(typed.player, typed.plays);
     }

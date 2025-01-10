@@ -25,19 +25,12 @@ export default class Card {
     }
 
     private getScalarRank(rankText: string): number {
-        if (rankText >= '2' && rankText <= '9') return Number(rankText);
-        const rankMap = new Map<string, number>([
-            ['T', 10],
-            ['J', 11],
-            ['Q', 12],
-            ['K', 13],
-            ['A', 14]
-        ]);
+        const index = '23456789TJQKA'.split('').indexOf(rankText);
 
-        if (!rankMap.has(rankText)) {
+        if (index === -1) {
             throw 'Invalid card symbol: ' + rankText;
         } else {
-            return rankMap.get(rankText);
+            return index + 1;
         }
     }
 
