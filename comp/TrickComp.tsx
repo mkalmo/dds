@@ -23,12 +23,10 @@ const TrickComp = (props: Props) => {
     </React.Fragment>;
 
     return (
-        <>
+        <div>
             <span>{ props.trick.getLeadPlayer() }&nbsp;</span>
             { props.trick.cards().map(c => formatCard(c)) }
-            <br />
-            <br />
-        </>);
+        </div>);
 }
 
 export default TrickComp;

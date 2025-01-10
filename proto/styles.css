@@ -46,10 +46,14 @@
 
 .tricks {
     font-family: "Ubuntu Mono";
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     white-space: pre;
 }
 
 .tricks span {
     font-size: 0.8rem;
+}
+
+.tricks div {
+    margin-bottom: 1.1rem;
 }
