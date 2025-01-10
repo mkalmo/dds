@@ -11,6 +11,6 @@ export default class Exercise {
     ) {}
 
     getLead(): Card {
-        return this.tricks[0].getLead();
+        return this.tricks[0].getLeadCard();
     }
 }

@@ -19,8 +19,16 @@ export default class Trick {
             + this.plays.map(p => p.card).join(',');
     }
 
-    getLead(): Card {
+    getLeadCard(): Card {
         return this.plays[0].card;
+    }
+
+    getLeadPlayer(): string {
+        return this.plays[0].player;
+    }
+
+    cards() {
+        return this.plays.map(p => p.card);
     }
 
     public winner(): string {

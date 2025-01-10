@@ -3,6 +3,7 @@ import HandComp from "./HandComp.tsx";
 import Exercise from "./Exercise.ts";
 import { Players } from "../constants.ts";
 import Card from "./Card.ts";
+import TrickComp from "./TrickComp.tsx";
 
 type Props = {
     exercise: Exercise,
@@ -46,7 +47,7 @@ const BoardComp = (props: Props) => {
             </div>
             <div className='tricks'>
                 { props.exercise.tricks.map(
-                    (trick, i) => <div key={i}>{ trick.toString() }</div>)  }
+                    (trick, i) => <TrickComp key={i} trick={ trick } />)  }
             </div>
         </div>);
 
