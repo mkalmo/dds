@@ -16,9 +16,7 @@ export default class Trick {
     toString(): string {
         return this.plays[0].player
             + ':'
-            + this.plays.map(p => p.card).join(',')
-            + '->'
-            + this.winner();
+            + this.plays.map(p => p.card).join(',');
     }
 
     getLead(): Card {

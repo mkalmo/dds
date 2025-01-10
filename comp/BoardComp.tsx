@@ -1,30 +1,55 @@
 import React from 'react';
 import HandComp from "./HandComp.tsx";
-import Deal from "./Deal.ts";
+import Exercise from "./Exercise.ts";
+import { Players } from "../constants.ts";
+import Card from "./Card.ts";
 
 type Props = {
-    deal: Deal,
+    exercise: Exercise,
     num: number,
     key: number
 }
 
+function formatCard(card: Card): string {
+    return card.rank + formatSuit(card.suit);
+}
+
+function formatSuit(suit: string): string {
+    const index = ['N', 'S', 'H', 'D', 'C'].indexOf(suit);
+    return String.fromCharCode([78, 9824, 9829, 9830, 9827][index]);
+}
+
 const BoardComp = (props: Props) => {
 
+    const [nCards, eCards, sCards, wCards] =
+        Players.map(player => props.exercise.deal.getPlayerCards(player));
+
     return (
-        <div className="grid-table">
-            <div></div>
-            <div><HandComp num={1} hand={props.deal.nHand}/></div>
-            <div>3</div>
-            <div><HandComp num={1} hand={props.deal.eHand}/></div>
-            <div>{props.num}</div>
-            <div><HandComp num={1} hand={props.deal.wHand}/></div>
-            <div>7</div>
-            <div><HandComp num={1} hand={props.deal.sHand}/></div>
-            <div>9</div>
-        </div>
-    );
+        <div className="frames">
+            <div className="grid-table">
+                <div></div>
+                <div className='northCell'>
+                    <span className='info'>
+                        {formatSuit(props.exercise.strain)}&nbsp;
+                        {formatCard(props.exercise.getLead())}&nbsp;
+                        ({props.exercise.target})
+                    </span>
+                    <HandComp num={1} cards={nCards}/>
+                </div>
+                <div></div>
+                <div><HandComp num={1} cards={wCards}/></div>
+                <div>{props.num}</div>
+                <div><HandComp num={1} cards={eCards}/></div>
+                <div></div>
+                <div><HandComp num={1} cards={sCards}/></div>
+                <div></div>
+            </div>
+            <div className='tricks'>
+                { props.exercise.tricks.map(
+                    (trick, i) => <div key={i}>{ trick.toString() }</div>)  }
+            </div>
+        </div>);
 
 }
-// <div>this board {props.num}</div>;
 
 export default BoardComp;

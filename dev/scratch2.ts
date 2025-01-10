@@ -9,7 +9,7 @@ import Card from "../comp/Card.ts";
 const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 
 const deal = Deal.fromPBN(pbn);
-console.log(deal.opener());
+console.log(deal.opener);
 // deal.removeCard(Player.West, Card.parse('AD'));
 // console.log(deal.toPBN(Player.North));
 

@@ -1,4 +1,3 @@
-import { nextPlays } from './functions.ts';
 import { NEXT_PLAYER, Player } from './constants.ts';
 import Deal from "./comp/Deal.ts";
 import NextPlaysResult from "./comp/NextPlaysResult.ts";
@@ -12,7 +11,7 @@ export class Board {
     private readonly firstPlayer: string;
     private readonly strain: string;
     private player: string;
-    private plays: Play[];
+    public plays: Play[];
     public tricks: Trick[];
     public ew_tricks: number;
     public nsTricks: number;
@@ -65,18 +64,17 @@ export class Board {
         this.lastTrickPBN = this.cards.toPBN(Player.fromString(this.player));
     }
 
-    // // Interface to dds.js
-    nextPlays(): NextPlaysResult {
-        const raw = nextPlays(this.lastTrickPBN,
-            this.strain,
-            this.plays.map(p => p.card.toString()));
-
-        if (raw['error']) {
-            throw Error('nextPlays(): ' + raw['message']);
-        }
-
-        return NextPlaysResult.fromRaw(raw);
-    }
+    // nextPlays(): NextPlaysResult {
+    //     const raw = nextPlays(this.lastTrickPBN,
+    //         this.strain,
+    //         this.plays.map(p => p.card.toString()));
+    //
+    //     if (raw['error']) {
+    //         throw Error('nextPlays(): ' + raw['message']);
+    //     }
+    //
+    //     return NextPlaysResult.fromRaw(raw);
+    // }
 
     getDeclarer() {
         return NEXT_PLAYER.get(NEXT_PLAYER.get(NEXT_PLAYER.get(this.firstPlayer)));

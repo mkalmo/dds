@@ -1,15 +1,17 @@
 import React from 'react';
-import Hand from "./Hand.ts";
+import Card from "./Card.ts";
+import { Suits } from "../constants.ts";
 
 type Props = {
     num: number,
-    hand: Hand,
+    cards: Card[],
 }
 
 const HandComp = (props: Props) => {
 
-    const suits = ['S', 'H', 'D', 'C']
-        .map(suit => props.hand.getCardsOfSuit(suit).join(' '));
+    const suits = Suits
+        .map(suit => props.cards.filter(card => card.suit === suit)
+            .map(c => c.rank).join(' '));
 
     return (
         <div className="hand">

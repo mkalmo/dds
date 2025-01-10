@@ -1,9 +1,9 @@
 import { Player } from "../constants.ts";
 import Deal from "../comp/Deal.ts";
-import { calcDDTable } from "../functions.ts";
 import Card from "../comp/Card.ts";
 import { Board } from "../Board.ts";
 import Exercise from "../comp/Exercise.ts";
+import Wasm from "../comp/Wasm.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
@@ -82,7 +82,7 @@ function generateBridgeHand(targetHCP: number, deck: string[]): string[] {
     return selectedHCP.concat(randomCards);
 }
 
-export default function generateDeal(nPoints: number, sPoints: number): Deal {
+export function generateDeal(nPoints: number, sPoints: number): Deal {
 
     let deck = getDeck();
 
@@ -98,7 +98,7 @@ export default function generateDeal(nPoints: number, sPoints: number): Deal {
 
     const wCards = deck.slice(13, 26);
 
-    const deal = new Deal(Player.South);
+    const deal = new Deal(Player.West);
 
     deal.addCards(Player.North, nCards.map(c => Card.parse(c)));
     deal.addCards(Player.East, eCards.map(c => Card.parse(c)));
@@ -108,25 +108,23 @@ export default function generateDeal(nPoints: number, sPoints: number): Deal {
     return deal;
 }
 
-export function generateExercise(): Exercise {
+export function generateExercise(wasm: Wasm): Exercise {
 
-    const pbn = 'W:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
+    // const pbn = 'W:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 
-    // const deal = generateDeal(11, 14);
-    const deal = Deal.fromPBN(pbn);
+    const deal = generateDeal(11, 14);
+    // const deal = Deal.fromPBN(pbn);
+    const pbn = deal.toPBN(deal.opener);
 
-    // console.log(deal.toString());
-
-    const result = calcDDTable(deal.toPBN(deal.opener));
-
-    // console.log(result);
+    const result = wasm.calcDDTable(pbn);
 
     const strain = result.getBestStrain();
 
     const board = new Board(pbn, strain);
 
     while (!board.isCompleted()) {
-        const playsResult = board.nextPlays();
+        const playsResult = wasm.nextPlays(
+            board.lastTrickPBN, strain, board.plays.map(p => p.card));
 
         const card = playsResult.getCardToPlay();
 
@@ -134,6 +132,4 @@ export function generateExercise(): Exercise {
     }
 
     return new Exercise(deal, strain, board.nsTricks, board.tricks);
-
-    //console.log(board.tricks.map(t => t.toString()).join("\n"));
 }

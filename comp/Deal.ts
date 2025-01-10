@@ -1,5 +1,6 @@
 import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "../constants.ts";
 import Card from "./Card.ts";
+import Hand from "./Hand.ts";
 
 export default class Deal {
 
@@ -16,7 +17,7 @@ export default class Deal {
     }
 
     addCards(player: Player, cards: Card[]): void {
-        cards.forEach(c => this.playersToCards.get(player).push(c));
+        this.sort(cards).forEach(c => this.playersToCards.get(player).push(c));
     }
 
     removeCard(player: Player, card: Card): void {
@@ -70,6 +71,10 @@ export default class Deal {
         }
 
         return player + ':' + holdings.join(' ');
+    }
+
+    public getPlayerCards(player: Player): Card[] {
+        return this.playersToCards.get(player);
     }
 
     private getCardsBySuit(player: Player, suit: string) {

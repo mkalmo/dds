@@ -6,20 +6,43 @@
 .grid-table {
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: 10rem 10rem 10rem;
-    grid-template-rows: 10rem 10rem 10rem;
+    grid-template-columns: 15rem 15rem 15rem;
+    grid-template-rows: 12rem 12rem 12rem;
+}
+
+.frames {
+    display: grid;
+    grid-template-columns: auto 8rem;
     break-before: page;
 }
 
-.grid-table div {
+.northCell {
+    position: relative;
+}
+
+.info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.3rem;
+}
+
+.grid-table > div {
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 1px;
 }
 
 .hand {
     font-family: "Ubuntu Mono";
     border: none;
+    font-size: 2rem;
+}
+
+.tricks {
+    font-family: "Ubuntu Mono";
+    font-size: 1.1rem;
+    white-space: pre;
 }

@@ -1,13 +1,13 @@
-import { Player } from "../constants.ts";
+import { Player, Suit } from "../constants.ts";
+import Card from "./Card.ts";
 
 export default class Hand {
 
     constructor(public player: Player,
-                private cards: string[]) {}
+                private cards: Card[]) {}
 
-    getCardsOfSuit(suit: string): string[] {
+    getCardsOfSuit(suit: Suit): string[] {
         return this.cards
-            .map(c => c.split(''))
             .filter(pair => pair[1] === suit)
             .map(pair => pair[0]);
     }

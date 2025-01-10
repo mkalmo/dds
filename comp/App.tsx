@@ -1,21 +1,20 @@
 import React from 'react';
 import BoardComp from "./BoardComp.tsx";
-import generateDeal from "../dev/generator.ts";
+import { generateExercise } from "../dev/generator.ts";
+import Wasm from "./Wasm.ts";
 
 const App = () => {
 
-    // get deal
-    // calculate first play
-    // calculate trick count
-    // calculate trick list
+    const exercises = Array.from({ length: 2 }).map((_, i) => {
+        console.log('ex:', i);
 
-    const deal = generateDeal(9, 16);
-
-    const data = [1];
+        return generateExercise(new Wasm(Module));
+    });
 
     return (
         <>
-            { data.map(e => <BoardComp num={1} key={Math.random()} deal={deal} />)  }
+            { exercises.map((ex, i) => <BoardComp num={i + 1}
+                                                 key={Math.random()} exercise={ex} />)  }
         </>
     );
 
