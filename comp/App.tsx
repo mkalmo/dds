@@ -13,8 +13,10 @@ const App = () => {
 
     return (
         <>
-            { exercises.map((ex, i) => <BoardComp num={i + 1}
-                                                 key={Math.random()} exercise={ex} />)  }
+            { exercises.map((ex, i) =>
+                <BoardComp num={i + 1}
+                           key={Math.random()}
+                           exercise={ex} />)  }
         </>
     );
 

@@ -4,7 +4,6 @@
 }
 
 .grid-table {
-    margin-top: 1rem;
     display: grid;
     grid-template-columns: 15rem 15rem 15rem;
     grid-template-rows: 12rem 12rem 12rem;
@@ -12,8 +11,12 @@
 
 .frames {
     display: grid;
-    grid-template-columns: auto 8rem;
+    grid-template-columns: auto 9rem;
     break-before: page;
+}
+
+.frames > div {
+    /*border: 1px solid black;*/
 }
 
 .northCell {
@@ -28,7 +31,7 @@
 }
 
 .grid-table > div {
-    border: 1px solid black;
+    border: 1px solid lightgray;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,4 +48,8 @@
     font-family: "Ubuntu Mono";
     font-size: 1.2rem;
     white-space: pre;
+}
+
+.tricks span {
+    font-size: 0.8rem;
 }
