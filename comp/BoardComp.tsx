@@ -32,8 +32,7 @@ const BoardComp = (props: Props) => {
                 <div className='northCell'>
                     <span className='info'>
                         {formatSuit(props.exercise.strain)}&nbsp;
-                        {formatCard(props.exercise.getLead())}&nbsp;
-                        ({props.exercise.target})
+                        {formatCard(props.exercise.getLead())}
                     </span>
                     <HandComp num={1} cards={nCards}/>
                 </div>
@@ -49,6 +48,9 @@ const BoardComp = (props: Props) => {
                 { props.exercise.tricks.map(
                     (trick, i) => <TrickComp key={i} trick={ trick } />)  }
             </div>
+            <footer className='footer'>
+                {props.exercise.target} { props.exercise.deal.getPbn() }
+            </footer>
         </div>);
 
 }

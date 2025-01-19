@@ -3,20 +3,22 @@
     size: a4 landscape;
 }
 
+.frames {
+    display: grid;
+    grid-template-rows: auto 2.5rem;
+    grid-template-columns: auto 9rem;
+    break-before: page;
+    /*border: 1px solid black;*/
+}
+
+.frames .footer {
+    /*border: 1px solid black;*/
+}
+
 .grid-table {
     display: grid;
     grid-template-columns: 15rem 15rem 15rem;
     grid-template-rows: 12rem 12rem 12rem;
-}
-
-.frames {
-    display: grid;
-    grid-template-columns: auto 9rem;
-    break-before: page;
-}
-
-.frames > div {
-    /*border: 1px solid black;*/
 }
 
 .northCell {
@@ -52,6 +54,11 @@
 
 .tricks span {
     font-size: 0.8rem;
+}
+
+footer {
+    padding-top: 1.5rem;
+    font-size: 0.5rem;
 }
 
 .tricks div {

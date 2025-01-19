@@ -1,9 +1,10 @@
-import { Player } from "./constants.ts";
+import { Player, Suit } from "./constants.ts";
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
 import { Board } from "./Board.ts";
 import Exercise from "./Exercise.ts";
 import Wasm from "./Wasm.ts";
+import NextPlayCalculator from "./NextPlayCalculator.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
@@ -110,10 +111,9 @@ export function generateDeal(nPoints: number, sPoints: number): Deal {
 
 export function generateExercise(wasm: Wasm): Exercise {
 
-    // const pbn = 'W:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
-
     const deal = generateDeal(11, 14);
-    // const deal = Deal.fromPBN(pbn);
+    // const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
+    // const deal = Deal.fromPBN();
     const pbn = deal.toPBN(deal.opener);
 
     const result = wasm.calcDDTable(pbn);
@@ -126,7 +126,9 @@ export function generateExercise(wasm: Wasm): Exercise {
         const playsResult = wasm.nextPlays(
             board.lastTrickPBN, strain, board.plays.map(p => p.card));
 
-        const card = playsResult.getCardToPlay();
+        const calc = new NextPlayCalculator(playsResult, deal, strain);
+
+        const card = calc.getNextPlay();
 
         board.play(playsResult.player, card);
     }

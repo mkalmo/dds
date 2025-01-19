@@ -6,4 +6,4 @@ import Wasm from "../modules/Wasm.ts";
 
 const ex = generateExercise(new Wasm(wasmModule));
 
-console.log(ex);
+// console.log(ex);

@@ -1,6 +1,5 @@
 import { NEXT_PLAYER, Player } from './constants.ts';
 import Deal from "./Deal.ts";
-import NextPlaysResult from "./NextPlaysResult.ts";
 import Card from "./Card.ts";
 import Trick from "./Trick.ts";
 import { Play } from "./types.ts";

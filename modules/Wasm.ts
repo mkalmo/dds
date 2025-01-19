@@ -1,6 +1,7 @@
 import DDTableResult from "./DDTableResult.ts";
 import Card from "./Card.ts";
 import NextPlaysResult from "./NextPlaysResult.ts";
+import { Strain } from "./constants.ts";
 
 export default class Wasm {
 
@@ -28,7 +29,7 @@ export default class Wasm {
         return DDTableResult.fromRaw(raw);
     }
 
-    nextPlays(pbn: string, strain: string, plays: Card[]): NextPlaysResult {
+    nextPlays(pbn: string, strain: Strain, plays: Card[]): NextPlaysResult {
         const playsPtr = this.packPlays(plays);
 
         const result = JSON.parse(this.solveBoardWasm(pbn, strain, plays.length, playsPtr));

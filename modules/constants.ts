@@ -1,9 +1,3 @@
-// const NEXT_PLAYER1 = {
-//     'N': 'E',
-//     'E': 'S',
-//     'S': 'W',
-//     'W': 'N'
-// };
 
 export const NEXT_PLAYER = new Map<string, string>(
     [['N', 'E'],
@@ -64,6 +58,15 @@ export const Suits = [
     Suit.Clubs
 ];
 
+export type Strain = Suit | 'N';
+
+export const Strains: Strain[] = [
+    'N',
+    Suit.Spades,
+    Suit.Harts,
+    Suit.Diamonds,
+    Suit.Clubs
+];
 
 export const SUIT_RANKS = {'S': 0, 'H': 1, 'D': 2, 'C': 3};
 

@@ -1,3 +1,4 @@
+import { Strain, Strains } from "./constants.ts";
 
 type PlayerScore =  {
     N: number;
@@ -15,7 +16,7 @@ type StrainToPlayerScore = {
 }
 
 type StrainScoreEntry = {
-    strain: string,
+    strain: Strain,
     nsScore: number,
     ewScore: number
 }
@@ -25,7 +26,7 @@ export default class DDTableResult {
     static fromRaw(raw: any) {
         const strainToPlayerScore = raw as StrainToPlayerScore;
         const scores: StrainScoreEntry[] = [];
-        for (const strain of ['N', 'S', 'H', 'D', 'C'] as const) {
+        for (const strain of Strains) {
             const playerScores: PlayerScore  = strainToPlayerScore[strain];
             scores.push(
                 { strain, nsScore: playerScores.N, ewScore: playerScores.E });
@@ -37,7 +38,7 @@ export default class DDTableResult {
 
     constructor(private readonly scores: StrainScoreEntry[]) {}
 
-    getBestStrain() {
+    getBestStrain(): Strain {
         let best = this.scores[0];
         for (const current of this.scores) {
             if (current.nsScore > best.nsScore) {
@@ -46,13 +47,4 @@ export default class DDTableResult {
         }
         return best.strain;
     }
-
 }
-
-// {
-//     N: { N: 3, S: 3, E: 9, W: 9 },
-//     S: { N: 5, S: 5, E: 8, W: 8 },
-//     H: { N: 3, S: 3, E: 9, W: 9 },
-//     D: { N: 6, S: 6, E: 7, W: 7 },
-//     C: { N: 3, S: 3, E: 9, W: 9 }
-// }

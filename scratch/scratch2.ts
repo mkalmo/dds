@@ -1,36 +1,21 @@
-import _ from "underscore";
-import { NEXT_PLAYER, Player, SUITS } from "../modules/constants.ts";
+import { Suit } from "../modules/constants.ts";
 import Deal from "../modules/Deal.ts";
-import Trick from "../modules/Trick.ts";
-import Card from "../modules/Card.ts";
+import Wasm from "../modules/Wasm.ts";
+// @ts-ignore
+import * as wasmModule from '../out.js';
+import NextPlayCalculator from "../modules/NextPlayCalculator.ts";
 
 // const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 // const pbn = 'S:AQ.2.. 94.4.. 67.A.. KJ.3..';
-const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
+const pbn = 'S:AKQ86.J..Q863 943.K74.64.KJ JT52..K.AT975 7.T9862.98.42';
 
 const deal = Deal.fromPBN(pbn);
 console.log(deal.opener);
-// deal.removeCard(Player.West, Card.parse('AD'));
-// console.log(deal.toPBN(Player.North));
 
-//
-// Card { rank: 'A', suit: 'D' }
-// const result = Deal.fromPBN(pbn);
-// console.log(result.toPBN(Player.South));
+const result = new Wasm(wasmModule).nextPlays(pbn, Suit.Spades, []);
 
-// const plays = [
-//     { player: 'N', card: Card.parse('7S') },
-//     { player: 'E', card: Card.parse('KS') },
-//     { player: 'S', card: Card.parse('AS') },
-//     { player: 'W', card: Card.parse('4S') }
-// ];
-// const trick2 = new Trick('S', plays);
-//
-// console.log(trick2.toString());
-// console.log(trick2.winner());
+console.log(result.getCorrectPlays());
 
-// const deal = new Deal([]);
-// deal.addCard(Player.North, 'KD');
-// deal.addCard(Player.North, 'TD');
-// console.log(deal.toString());
+const calc = new NextPlayCalculator(result, deal, Suit.Spades);
 
+console.log(calc.getNextPlay());

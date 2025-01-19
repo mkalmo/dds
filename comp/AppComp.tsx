@@ -5,7 +5,7 @@ import Wasm from "../modules/Wasm.ts";
 
 const AppComp = () => {
 
-    const exercises = Array.from({ length: 1 }).map((_, i) => {
+    const exercises = Array.from({ length: 2 }).map((_, i) => {
         console.log('ex:', i);
 
         return generateExercise(new Wasm(Module));
