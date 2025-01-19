@@ -5,11 +5,9 @@ const transform = (filename, code) => Babel.transform(code, {
     plugins: ['transform-modules-systemjs'],
 }).code;
 
-System.shouldFetch = function () { return true; };
+System.shouldFetch = () => true;
 
 System.constructor.prototype.fetch = async url => {
-    // console.log('args: ', args);
-
     const filename = url.split('/').pop();
     if (!filename.endsWith('.tsx') && !filename.endsWith('.ts')) {
         return fetch(url);

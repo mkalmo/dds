@@ -1,4 +1,4 @@
-import { Player, Suit } from "../constants.ts";
+import { Player, Suit } from "./constants.ts";
 import Card from "./Card.ts";
 
 export default class Hand {

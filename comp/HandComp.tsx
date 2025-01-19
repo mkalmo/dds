@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from "./Card.ts";
-import { Suits } from "../constants.ts";
+import Card from "../modules/Card.ts";
+import { Suits } from "../modules/constants.ts";
 
 type Props = {
     num: number,

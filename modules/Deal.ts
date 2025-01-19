@@ -1,4 +1,4 @@
-import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "../constants.ts";
+import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "./constants.ts";
 import Card from "./Card.ts";
 import Hand from "./Hand.ts";
 

@@ -1,8 +1,8 @@
 import _ from "underscore";
-import { NEXT_PLAYER, Player, SUITS } from "../constants.ts";
-import Deal from "../comp/Deal.ts";
-import Trick from "../comp/Trick.ts";
-import Card from "../comp/Card.ts";
+import { NEXT_PLAYER, Player, SUITS } from "../modules/constants.ts";
+import Deal from "../modules/Deal.ts";
+import Trick from "../modules/Trick.ts";
+import Card from "../modules/Card.ts";
 
 // const pbn = 'N:T843.K4.KT853.73 J97.J763.642.KJ5 Q52.Q982.QJ.9862 AK6.AT5.A97.AQT4';
 // const pbn = 'S:AQ.2.. 94.4.. 67.A.. KJ.3..';

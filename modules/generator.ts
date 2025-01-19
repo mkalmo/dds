@@ -1,9 +1,9 @@
-import { Player } from "../constants.ts";
-import Deal from "../comp/Deal.ts";
-import Card from "../comp/Card.ts";
-import { Board } from "../Board.ts";
-import Exercise from "../comp/Exercise.ts";
-import Wasm from "../comp/Wasm.ts";
+import { Player } from "./constants.ts";
+import Deal from "./Deal.ts";
+import Card from "./Card.ts";
+import { Board } from "./Board.ts";
+import Exercise from "./Exercise.ts";
+import Wasm from "./Wasm.ts";
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];

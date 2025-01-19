@@ -1,4 +1,4 @@
-import { generateDeal } from './generator.ts';
+import { generateDeal } from '../modules/generator.ts';
 
 // const h = new Hand(['AS', 'JS', 'JH', 'JC', 'QD', 'JD']);
 // const s = h.getCardsOfSuit('D');

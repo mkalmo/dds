@@ -1,4 +1,4 @@
-import { SUIT_RANKS1 } from "../constants.ts";
+import { SUIT_RANKS1 } from "./constants.ts";
 
 export default class Card {
 

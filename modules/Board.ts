@@ -1,9 +1,9 @@
 import { NEXT_PLAYER, Player } from './constants.ts';
-import Deal from "./comp/Deal.ts";
-import NextPlaysResult from "./comp/NextPlaysResult.ts";
-import Card from "./comp/Card.ts";
-import Trick from "./comp/Trick.ts";
-import { Play } from "./comp/types.ts";
+import Deal from "./Deal.ts";
+import NextPlaysResult from "./NextPlaysResult.ts";
+import Card from "./Card.ts";
+import Trick from "./Trick.ts";
+import { Play } from "./types.ts";
 
 export class Board {
     public readonly cards: Deal;

@@ -1,9 +1,9 @@
 import React from 'react';
 import HandComp from "./HandComp.tsx";
-import Exercise from "./Exercise.ts";
-import { Players } from "../constants.ts";
-import Card from "./Card.ts";
-import Trick from "./Trick.ts";
+import Exercise from "../modules/Exercise.ts";
+import { Players } from "../modules/constants.ts";
+import Card from "../modules/Card.ts";
+import Trick from "../modules/Trick.ts";
 
 type Props = {
     trick: Trick
