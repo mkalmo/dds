@@ -1,7 +1,7 @@
 import React from 'react';
 import HandComp from "./HandComp.tsx";
 import Exercise from "../modules/Exercise.ts";
-import { Players } from "../modules/constants.ts";
+import { Players, Strain, Strains } from "../modules/constants.ts";
 import Card from "../modules/Card.ts";
 import TrickComp from "./TrickComp.tsx";
 
@@ -12,15 +12,15 @@ type Props = {
 }
 
 function formatCard(card: Card): string {
-    return card.rank + formatSuit(card.suit);
+    return card.rank + formatStrain(card.suit as Strain);
 }
 
-function formatSuit(suit: string): string {
-    const index = ['N', 'S', 'H', 'D', 'C'].indexOf(suit);
+function formatStrain(suit: Strain): string {
+    const index = Strains.indexOf(suit);
     return String.fromCharCode([78, 9824, 9829, 9830, 9827][index]);
 }
 
-const BoardComp = (props: Props) => {
+const PrintBoardComp = (props: Props) => {
 
     const [nCards, eCards, sCards, wCards] =
         Players.map(player => props.exercise.deal.getPlayerCards(player));
@@ -31,7 +31,7 @@ const BoardComp = (props: Props) => {
                 <div></div>
                 <div className='northCell'>
                     <span className='info'>
-                        {formatSuit(props.exercise.strain)}&nbsp;
+                        {formatStrain(props.exercise.strain)}&nbsp;
                         {formatCard(props.exercise.getLead())}
                     </span>
                     <HandComp num={1} cards={nCards}/>
@@ -52,7 +52,6 @@ const BoardComp = (props: Props) => {
                 {props.exercise.target} { props.exercise.deal.getPbn() }
             </footer>
         </div>);
-
 }
 
-export default BoardComp;
+export default PrintBoardComp;

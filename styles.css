@@ -15,6 +15,16 @@
     /*border: 1px solid black;*/
 }
 
+.play-table {
+    display: grid;
+    grid-template-rows: 17rem 8rem 17rem;
+    /*border: 1px solid black;*/
+}
+
+.play-table > div {
+    justify-self: center;
+}
+
 .grid-table {
     display: grid;
     grid-template-columns: 15rem 15rem 15rem;
@@ -44,6 +54,10 @@
     font-family: "Ubuntu Mono";
     border: none;
     font-size: 2rem;
+}
+
+.play-table .hand {
+    font-size: 3rem;
 }
 
 .tricks {

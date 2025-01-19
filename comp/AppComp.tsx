@@ -1,5 +1,5 @@
 import React from 'react';
-import BoardComp from "./BoardComp.tsx";
+import PrintBoardComp from "./PrintBoardComp.tsx";
 import { generateExercise } from "../modules/generator.ts";
 import Wasm from "../modules/Wasm.ts";
 
@@ -14,9 +14,9 @@ const AppComp = () => {
     return (
         <>
             { exercises.map((ex, i) =>
-                <BoardComp num={i + 1}
-                           key={Math.random()}
-                           exercise={ex} />)  }
+                <PrintBoardComp num={i + 1}
+                                key={Math.random()}
+                                exercise={ex} />)  }
         </>
     );
 
