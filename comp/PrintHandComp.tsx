@@ -7,7 +7,7 @@ type Props = {
     cards: Card[],
 }
 
-const HandComp = (props: Props) => {
+const PrintHandComp = (props: Props) => {
 
     const suits = Suits
         .map(suit => props.cards.filter(card => card.suit === suit)
@@ -23,4 +23,4 @@ const HandComp = (props: Props) => {
     );
 }
 
-export default HandComp;
+export default PrintHandComp;

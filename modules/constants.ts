@@ -1,16 +1,15 @@
-
-export const NEXT_PLAYER = new Map<string, string>(
-    [['N', 'E'],
-    ['E', 'S'],
-    ['S', 'W'],
-    ['W', 'N']]);
-
 export enum Player {
     North = 'N',
     East = 'E',
     South = 'S',
     West = 'W'
 }
+
+export const NEXT_PLAYER = new Map<Player, Player>(
+    [[Player.North, Player.East],
+    [Player.East, Player.South],
+    [Player.South, Player.West],
+    [Player.West, Player.North]]);
 
 export namespace Player {
     export function fromString(valueAsString: string): Player {

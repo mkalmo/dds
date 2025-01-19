@@ -109,29 +109,31 @@ export function generateDeal(nPoints: number, sPoints: number): Deal {
     return deal;
 }
 
+export function generateBoard(wasm: Wasm): Board {
+    // const deal = generateDeal(11, 14);
+    const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
+    const deal = Deal.fromPBN(pbn);
+    // const pbn = deal.toPBN(deal.opener);
+
+    const strain = wasm.calcDDTable(pbn).getBestStrain();
+
+    return new Board(pbn, strain);
+}
+
 export function generateExercise(wasm: Wasm): Exercise {
 
-    const deal = generateDeal(11, 14);
-    // const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
-    // const deal = Deal.fromPBN();
-    const pbn = deal.toPBN(deal.opener);
-
-    const result = wasm.calcDDTable(pbn);
-
-    const strain = result.getBestStrain();
-
-    const board = new Board(pbn, strain);
+    const board = generateBoard(wasm);
 
     while (!board.isCompleted()) {
         const playsResult = wasm.nextPlays(
-            board.lastTrickPBN, strain, board.plays.map(p => p.card));
+            board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
 
-        const calc = new NextPlayCalculator(playsResult, deal, strain);
+        const calc = new NextPlayCalculator(playsResult, board.cards, board.strain);
 
         const card = calc.getNextPlay();
 
         board.play(playsResult.player, card);
     }
 
-    return new Exercise(deal, strain, board.nsTricks, board.tricks);
+    return new Exercise(board.cards, board.strain, board.nsTricks, board.tricks);
 }

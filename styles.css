@@ -25,6 +25,10 @@
     justify-self: center;
 }
 
+.inactive {
+    color: gray;
+}
+
 .grid-table {
     display: grid;
     grid-template-columns: 15rem 15rem 15rem;

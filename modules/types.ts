@@ -1,7 +1,7 @@
 import Card from "./Card.ts";
+import { Player } from "./constants.ts";
 
 export type Play =  {
-    player: string,
+    player: Player,
     card : Card
 };
-

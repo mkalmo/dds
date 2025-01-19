@@ -1,5 +1,6 @@
 import { Play } from "./types.ts";
 import Card from "./Card.ts";
+import { Player } from "./constants.ts";
 
 export default class Trick {
 
@@ -31,7 +32,7 @@ export default class Trick {
         return this.plays.map(p => p.card);
     }
 
-    public winner(): string {
+    public winner(): Player {
         let topSuit = this.plays[0].card.suit,
             topRank = this.plays[0].card.scalarRank,
             winner = this.plays[0].player;

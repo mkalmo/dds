@@ -1,7 +1,8 @@
 import React from 'react';
-import HandComp from "./HandComp.tsx";
+import PrintHandComp from "./PrintHandComp.tsx";
 import Exercise from "../modules/Exercise.ts";
-import { Players, Strain, Strains } from "../modules/constants.ts";
+import { Players, Strain } from "../modules/constants.ts";
+import { formatStrain } from "./common.ts";
 import Card from "../modules/Card.ts";
 import TrickComp from "./TrickComp.tsx";
 
@@ -13,11 +14,6 @@ type Props = {
 
 function formatCard(card: Card): string {
     return card.rank + formatStrain(card.suit as Strain);
-}
-
-function formatStrain(suit: Strain): string {
-    const index = Strains.indexOf(suit);
-    return String.fromCharCode([78, 9824, 9829, 9830, 9827][index]);
 }
 
 const PrintBoardComp = (props: Props) => {
@@ -34,14 +30,14 @@ const PrintBoardComp = (props: Props) => {
                         {formatStrain(props.exercise.strain)}&nbsp;
                         {formatCard(props.exercise.getLead())}
                     </span>
-                    <HandComp num={1} cards={nCards}/>
+                    <PrintHandComp num={1} cards={nCards}/>
                 </div>
                 <div></div>
-                <div><HandComp num={1} cards={wCards}/></div>
+                <div><PrintHandComp num={1} cards={wCards}/></div>
                 <div>{props.num}</div>
-                <div><HandComp num={1} cards={eCards}/></div>
+                <div><PrintHandComp num={1} cards={eCards}/></div>
                 <div></div>
-                <div><HandComp num={1} cards={sCards}/></div>
+                <div><PrintHandComp num={1} cards={sCards}/></div>
                 <div></div>
             </div>
             <div className='tricks'>

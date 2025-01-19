@@ -1,4 +1,4 @@
-import { NEXT_PLAYER, Player } from './constants.ts';
+import { NEXT_PLAYER, Player, Strain } from './constants.ts';
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
 import Trick from "./Trick.ts";
@@ -7,20 +7,19 @@ import { Play } from "./types.ts";
 export class Board {
     public readonly cards: Deal;
     public lastTrickPBN: string;
-    private readonly firstPlayer: string;
-    private readonly strain: string;
-    private player: string;
+    private readonly firstPlayer: Player;
+    public readonly strain: Strain;
+    public player: Player;
     public plays: Play[];
     public tricks: Trick[];
     public ew_tricks: number;
     public nsTricks: number;
 
-    constructor(pbn: string, strain: string) {
+    constructor(pbn: string, strain: Strain) {
         this.cards = Deal.fromPBN(pbn);  // remaining cards in hands
         this.lastTrickPBN = pbn;
-        this.firstPlayer = pbn[0];  // first to play comes directly from PBN.
         this.strain = strain;  // e.g. spades or no trump ('H', 'S', 'N', ...)
-        this.player = this.firstPlayer;  // next to play
+        this.player = Player.fromString(pbn[0]);  // first to play comes directly from PBN.
         this.plays = [];  // plays in this trick
         this.tricks = [];  // previous tricks. Array of CompleteTrick.
         this.ew_tricks = 0;
@@ -35,8 +34,8 @@ export class Board {
         return this.cards.cardCount() === 0;
     }
 
-    play(player: string, card: Card) {
-        this.cards.removeCard(Player.fromString(player), card);
+    play(player: Player, card: Card) {
+        this.cards.removeCard(player, card);
 
         this.plays.push({ player, card });
 
@@ -62,21 +61,4 @@ export class Board {
         }
         this.lastTrickPBN = this.cards.toPBN(Player.fromString(this.player));
     }
-
-    // nextPlays(): NextPlaysResult {
-    //     const raw = nextPlays(this.lastTrickPBN,
-    //         this.strain,
-    //         this.plays.map(p => p.card.toString()));
-    //
-    //     if (raw['error']) {
-    //         throw Error('nextPlays(): ' + raw['message']);
-    //     }
-    //
-    //     return NextPlaysResult.fromRaw(raw);
-    // }
-
-    getDeclarer() {
-        return NEXT_PLAYER.get(NEXT_PLAYER.get(NEXT_PLAYER.get(this.firstPlayer)));
-    }
-
 }

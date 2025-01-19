@@ -1,25 +1,19 @@
 import React from 'react';
-import HandComp from "./HandComp.tsx";
-import Exercise from "../modules/Exercise.ts";
-import { Players } from "../modules/constants.ts";
 import Card from "../modules/Card.ts";
 import Trick from "../modules/Trick.ts";
+import { formatStrain } from "./common.ts";
+import { Strain } from "../modules/constants.ts";
 
 type Props = {
     trick: Trick
     key: number
 }
 
-function formatSuit(suit: string): string {
-    const index = ['N', 'S', 'H', 'D', 'C'].indexOf(suit);
-    return String.fromCharCode([78, 9824, 9829, 9830, 9827][index]);
-}
-
 const TrickComp = (props: Props) => {
 
     const formatCard = (c: Card) => <React.Fragment key={c.toString()}>
         {c.rank}
-        <span>{ formatSuit(c.suit) } </span>
+        <span>{ formatStrain(c.suit as Strain) } </span>
     </React.Fragment>;
 
     return (
