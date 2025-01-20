@@ -110,11 +110,11 @@ export function generateDeal(nPoints: number, sPoints: number): Deal {
 }
 
 export function generateBoard(wasm: Wasm): Board {
-    const deal = generateDeal(11, 14);
-    const pbn = deal.toPBN(deal.opener);
+    // const deal = generateDeal(11, 14);
+    // const pbn = deal.toPBN(deal.opener);
 
-    // const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
-    // const deal = Deal.fromPBN(pbn);
+    const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
+    const deal = Deal.fromPBN(pbn);
 
     const strain = wasm.calcDDTable(pbn).getBestStrain();
 

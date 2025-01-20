@@ -1,6 +1,7 @@
 import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "./constants.ts";
 import Card from "./Card.ts";
 import Hand from "./Hand.ts";
+import { Play } from "./types.ts";
 
 export default class Deal {
 
@@ -104,7 +105,7 @@ export default class Deal {
         return deal;
     }
 
-    private static parsePBNStrings(pbn: string): Map<string, string> {
+    private static parsePBNStrings(pbn: string): Map<Player, string> {
         const parts = pbn.split(' ');
         if (parts.length !== 4) {
             throw 'PBN must have four hands (got ' + parts.length + ')';
@@ -115,12 +116,12 @@ export default class Deal {
             throw 'PBN must start with either "N:", "S:", "E:" or "W:"';
         }
         parts[0] = parts[0].slice(2);
-        let player: string = m[1];
-        const hands = new Map<string, string>();
+        let player: Player = Player.fromString(m[1]);
+        const playerToHand = new Map<Player, string>();
         parts.forEach(txt => {
-            hands.set(player, txt);
+            playerToHand.set(player, txt);
             player = NEXT_PLAYER.get(player);
         });
-        return hands;
+        return playerToHand;
     }
 }

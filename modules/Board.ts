@@ -7,12 +7,11 @@ import { Play } from "./types.ts";
 export class Board {
     public readonly cards: Deal;
     public lastTrickPBN: string;
-    private readonly firstPlayer: Player;
     public readonly strain: Strain;
     public player: Player;
     public plays: Play[];
     public tricks: Trick[];
-    public ew_tricks: number;
+    public ewTricks: number;
     public nsTricks: number;
 
     constructor(pbn: string, strain: Strain) {
@@ -22,7 +21,7 @@ export class Board {
         this.player = Player.fromString(pbn[0]);  // first to play comes directly from PBN.
         this.plays = [];  // plays in this trick
         this.tricks = [];  // previous tricks. Array of CompleteTrick.
-        this.ew_tricks = 0;
+        this.ewTricks = 0;
         this.nsTricks = 0;
     }
 
@@ -57,8 +56,40 @@ export class Board {
         if (winner === 'N' || winner === 'S') {
             this.nsTricks++;
         } else {
-            this.ew_tricks++;
+            this.ewTricks++;
         }
         this.lastTrickPBN = this.cards.toPBN(Player.fromString(this.player));
+    }
+
+    isValidPlay(card: Card): boolean {
+        const cards = this.cards.getPlayerCards(this.player);
+
+        if (cards.length === 0) {
+            return false;
+        }
+
+        const playerHasTheCard = cards
+            .find(c => c.toString() === card.toString()) !== undefined;
+
+        const leadSuit = this.plays.length ? this.plays[0].card.suit : undefined;
+
+        if (!playerHasTheCard) {
+            return false;
+        } else if (playerHasTheCard && (leadSuit === undefined || card.suit === leadSuit)) {
+            return true;
+        }
+
+        const playerSuitCount = cards.filter(c => c.suit === leadSuit).length;
+
+        return playerSuitCount === 0 || card.suit === leadSuit;
+    }
+
+    isOpponentsTurn(): boolean {
+        return this.player === Player.West
+            || this.player === Player.East
+    }
+
+    getLastTrick(): Trick {
+        return this.tricks[this.tricks.length - 1];
     }
 }

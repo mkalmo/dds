@@ -30,20 +30,22 @@ function makeOpponentMove(board: Board): void {
 
 type State = {
     nCards: Card[]
-    sCards: Card[]
+    sCards: Card[],
+    currentTrickLead: Player,
+    currentTrickCards: Card[]
 }
 
 export default class PlayBoardComp extends Component<Props, {}> {
 
     state: State = {
         nCards: [],
-        sCards: []
+        sCards: [],
+        currentTrickLead: undefined,
+        currentTrickCards: []
     }
 
     async componentDidMount() {
         const board = this.props.board;
-
-        console.log('board', board.lastTrickPBN);
 
         makeOpponentMove(board);
 
@@ -56,7 +58,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
         console.log('player: ', board.player, ' card: ', card);
         board.play(board.player, card);
 
-        if (board.player === Player.West || board.player === Player.East) {
+        if (board.isOpponentsTurn()) {
             makeOpponentMove(board);
         }
 
@@ -69,33 +71,60 @@ export default class PlayBoardComp extends Component<Props, {}> {
         this.state.nCards = board.cards.getPlayerCards(Player.North);
         this.state.sCards = board.cards.getPlayerCards(Player.South);
 
+        this.state.currentTrickLead = board.plays.length
+            ? board.plays[0].player : undefined
+        this.state.currentTrickCards = board.plays.map(p => p.card);
+
+        if (board.isOpponentsTurn()
+            && this.state.currentTrickCards.length === 0
+            && board.getLastTrick() !== undefined) {
+
+            this.state.currentTrickLead =
+                board.getLastTrick().getLeadPlayer();
+                this.state.currentTrickCards = board.getLastTrick().cards();
+        }
+
         this.setState({});
     }
 
     render() {
+
+        const board = this.props.board;
 
         const formatCard = (c: Card) => <React.Fragment key={c.toString()}>
             {c.rank}
             <span>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
 
+        const currentTrickClickAction = () => {
+            if (board.isOpponentsTurn()) {
+                makeOpponentMove(board);
+                this.updateState();
+            }
+        };
+
         return (
+            <>
+            <div className='trickCount'>{board.nsTricks} / {board.ewTricks}</div>
             <div className="play-table">
                 <div>
                     <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                  enabled={this.props.board.player === Player.North}
+                                  isValidPlayFunc={c => board.isValidPlay(c)}
                                   cards={this.state.nCards}/>
                 </div>
                 <div>
-                    <div className="hand">
-                        { this.props.board.plays.map(p => formatCard(p.card)) }
+                    <div className="hand" onClick={currentTrickClickAction}>
+                        <span className='small'>{ this.state.currentTrickLead }</span>
+                        &nbsp;
+                        { this.state.currentTrickCards.map(card => formatCard(card)) }
                     </div>
                 </div>
                 <div>
                     <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                  enabled={this.props.board.player === Player.South}
+                                  isValidPlayFunc={c => board.isValidPlay(c)}
                                   cards={this.state.sCards}/>
                 </div>
-            </div>);
+            </div>
+            </>);
     }
 }

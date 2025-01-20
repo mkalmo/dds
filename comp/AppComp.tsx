@@ -7,13 +7,13 @@ import Exercise from "../modules/Exercise.ts";
 
 const AppComp = () => {
 
-    const exercises = Array.from({ length: 10 }).map((_, i) => {
-        console.log('ex:', i);
-        return generateExercise(new Wasm(Module));
-    });
+    // const exercises = Array.from({ length: 10 }).map((_, i) => {
+    //     console.log('ex:', i);
+    //     return generateExercise(new Wasm(Module));
+    // });
 
-    // const board = generateBoard(new Wasm(Module));
-    // const exercises: Exercise[] = [];
+    const board = generateBoard(new Wasm(Module));
+    const exercises: Exercise[] = [];
 
     return (
         <>
@@ -22,7 +22,7 @@ const AppComp = () => {
                                 key={i}
                                 exercise={ex} />)  }
 
-            {/*<PlayBoardComp board={board} />*/}
+            <PlayBoardComp board={board} />
         </>
     );
 

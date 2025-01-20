@@ -24,7 +24,7 @@ export default class Trick {
         return this.plays[0].card;
     }
 
-    getLeadPlayer(): string {
+    getLeadPlayer(): Player {
         return this.plays[0].player;
     }
 

@@ -64,6 +64,14 @@
     font-size: 3rem;
 }
 
+.play-table .small {
+    font-size: 1rem;
+}
+
+.trickCount {
+    text-align: right;
+}
+
 .tricks {
     font-family: "Ubuntu Mono";
     font-size: 1.4rem;
