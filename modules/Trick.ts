@@ -4,9 +4,10 @@ import { Player } from "./constants.ts";
 
 export default class Trick {
 
-    private plays: Play[] = [];
+    private readonly plays: Play[] = [];
 
-    constructor(private strain: string, plays: Play[]) {
+    constructor(private readonly strain: string, plays: Play[]) {
+
         if (plays.length > 4) {
             throw Error('incomplete trick');
         }

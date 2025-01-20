@@ -13,10 +13,10 @@ export default class Card {
         const [rank, suit] = cardAsString.split('');
 
         if (Suits.find(s => s.toString() === suit) === undefined) {
-            throw new Error(`Invalid suit: ${suit}`);
+            throw new Error(`Invalid suit: ${cardAsString}`);
         }
         if (RANKS.find(r => r === rank) === undefined) {
-            throw new Error(`Invalid rank: ${suit}`);
+            throw new Error(`Invalid rank: ${cardAsString}`);
         }
 
         return new Card(rank, suit);

@@ -5,36 +5,24 @@ import Trick from "./Trick.ts";
 import { Play } from "./types.ts";
 
 export class Board {
-    public readonly deal: Deal;
-    public lastTrickPBN: string;
-    public readonly strain: Strain;
+    public deal: Deal;
     public player: Player;
     public plays: Play[];
     public tricks: Trick[];
-    public ewTricks: number;
-    public nsTricks: number;
+    public trickStartPbns: string[];
 
-    constructor(pbn: string, strain: Strain) {
-        this.deal = Deal.fromPBN(pbn);  // remaining cards in hands
-        this.lastTrickPBN = pbn;
-        this.strain = strain;  // e.g. spades or no trump ('H', 'S', 'N', ...)
-        this.player = Player.fromString(pbn[0]);  // first to play comes directly from PBN.
+    constructor(initialPbn: string,
+                public readonly strain: Strain) {
+
+        this.deal = Deal.fromPBN(initialPbn);  // remaining cards in hands
+        this.player = Player.fromString(initialPbn[0]);  // first to play comes directly from PBN.
         this.plays = [];  // plays in this trick
         this.tricks = [];  // previous tricks. Array of CompleteTrick.
-        this.ewTricks = 0;
-        this.nsTricks = 0;
-    }
-
-    leader() {
-        return this.plays.length ? this.plays[0].player : this.player;
+        this.trickStartPbns = [initialPbn];
     }
 
     isCompleted() {
         return this.deal.cardCount() === 0;
-    }
-
-    getPbn(): string {
-        return this.deal.toPBN(this.player);
     }
 
     play(player: Player, card: Card) {
@@ -54,15 +42,25 @@ export class Board {
         const winner = trick.winner();
 
         this.tricks.push(trick);
+        this.trickStartPbns.push(this.deal.toPBN(winner));
         this.player = winner;
         this.plays = [];
+    }
 
-        if (winner === 'N' || winner === 'S') {
-            this.nsTricks++;
-        } else {
-            this.ewTricks++;
-        }
-        this.lastTrickPBN = this.deal.toPBN(Player.fromString(this.player));
+    getNsTrickCount(): number {
+        return this.tricks
+            .filter(t => t.winner() === Player.North
+                || t.winner() === Player.South).length
+    }
+
+    getEwTrickCount(): number {
+        return this.tricks
+            .filter(t => t.winner() === Player.East
+                || t.winner() === Player.West).length
+    }
+
+    getTrickStartPbn(): string {
+        return this.trickStartPbns[this.trickStartPbns.length - 1];
     }
 
     isValidPlay(card: Card): boolean {
@@ -101,23 +99,17 @@ export class Board {
         if (this.plays.length > 0) {
             this.undoPlayedCards();
         } else if (this.tricks.length > 0) {
-            this.undoLastTrick();
-        }
-    }
+            this.trickStartPbns.pop();
 
-    private undoLastTrick(): void {
-        const lastTrick = this.tricks.shift();
-        lastTrick.getPlays().forEach(
-            play => this.deal.addCard(play.player, play.card));
-        this.player = lastTrick.getLeadPlayer();
+            this.undoPlayedCards();
+        }
     }
 
     private undoPlayedCards(): void {
-        const firstToPlay = this.plays[0].player;
-        while (this.plays.length > 0) {
-            const play = this.plays.shift();
-            this.deal.addCard(play.player, play.card);
-        }
-        this.player = firstToPlay;
+        const pbn = this.getTrickStartPbn();
+
+        this.deal = Deal.fromPBN(pbn);
+        this.player = Player.fromString(pbn[0]);
+        this.plays = [];
     }
 }

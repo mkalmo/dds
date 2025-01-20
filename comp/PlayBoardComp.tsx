@@ -13,8 +13,11 @@ type Props = {
 const wasm = new Wasm(Module);
 
 function getCorrectPlays(board: Board): Card[] {
+    console.log(board.getTrickStartPbn());
+    console.log(board.plays.map(p => p.card.toString()).join(', '));
+
     const playsResult = wasm.nextPlays(
-        board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
+        board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
 
     return playsResult.getCorrectPlays();
 }
@@ -50,12 +53,31 @@ export default class PlayBoardComp extends Component<Props, {}> {
         wrongCardPlayed: false
     }
 
+    undoKeyHandler: (event: any) => void = undefined;
+
     async componentDidMount() {
         const board = this.props.board;
+
+        this.undoKeyHandler = (event: any) => {
+            if (event.key === 'Backspace') {
+                console.log('undo trick');
+                board.undoTrick();
+                if (board.isOpponentsTurn()) {
+                    makeOpponentMove(board);
+                }
+                this.updateState();
+            }
+        }
+
+        window.addEventListener('keyup', this.undoKeyHandler);
 
         makeOpponentMove(board);
 
         this.updateState();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keyup', this.undoKeyHandler);
     }
 
     playCard(card: Card): void {
@@ -117,7 +139,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
 
         return (
             <>
-            <div className='trickCount'>{board.nsTricks} / {board.ewTricks}</div>
+            <div className='trickCount'>{board.getNsTrickCount()} / {board.getEwTrickCount()}</div>
             <div className="play-table">
                 <div>
                     <PlayHandComp cardClickAction={c => this.playCard(c)}

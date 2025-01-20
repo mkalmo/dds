@@ -126,10 +126,10 @@ export function generateExercise(wasm: Wasm): Exercise {
     const originalBoard = generateBoard(wasm);
 
 
-    const board = new Board(originalBoard.lastTrickPBN, originalBoard.strain);
+    const board = new Board(originalBoard.getTrickStartPbn(), originalBoard.strain);
     while (!board.isCompleted()) {
         const playsResult = wasm.nextPlays(
-            board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
+            board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
 
         const calc = new NextPlayCalculator(playsResult, board.deal, board.strain);
 
@@ -139,5 +139,5 @@ export function generateExercise(wasm: Wasm): Exercise {
     }
 
     return new Exercise(originalBoard.deal,
-                        originalBoard.strain, board.nsTricks, board.tricks);
+                        originalBoard.strain, board.getNsTrickCount(), board.tricks);
 }
