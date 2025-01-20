@@ -68,6 +68,10 @@
     font-size: 1rem;
 }
 
+.play-table .hand.error {
+    color: red;
+}
+
 .trickCount {
     text-align: right;
 }

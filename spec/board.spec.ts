@@ -1,4 +1,4 @@
-import { test, expect } from '@jest/globals';
+import { expect, test } from '@jest/globals';
 import { Board } from "../modules/Board.ts";
 import { Player, Suit } from "../modules/constants.ts";
 import Card from "../modules/Card.ts";
@@ -49,4 +49,33 @@ test('Returns last trick', () => {
     board.play(Player.South, Card.parse('5S'));
 
     expect(board.getLastTrick()).toBeDefined();
+});
+
+test('Board supports undoing last trick', () => {
+
+    const pbn = 'W:2...J 3...Q 4...K 5...A';
+    const board = new Board(pbn, Suit.Spades);
+    board.play(Player.West, Card.parse('2S'));
+    board.play(Player.North, Card.parse('3S'));
+    board.play(Player.East, Card.parse('4S'));
+    board.play(Player.South, Card.parse('5S'));
+
+    expect(board.getPbn())
+        .toBe('S:...A ...J ...Q ...K');
+
+    board.play(Player.South, Card.parse('AC'));
+    board.play(Player.West, Card.parse('JC'));
+
+    expect(board.getPbn())
+        .toBe('N:...Q ...K ... ...');
+
+    board.undoTrick();
+
+    expect(board.getPbn())
+        .toBe('S:...A ...J ...Q ...K');
+
+    board.undoTrick();
+
+    expect(board.getPbn())
+        .toBe('W:2...J 3...Q 4...K 5...A');
 });

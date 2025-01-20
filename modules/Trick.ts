@@ -28,8 +28,12 @@ export default class Trick {
         return this.plays[0].player;
     }
 
-    cards() {
+    cards(): Card[] {
         return this.plays.map(p => p.card);
+    }
+
+    getPlays(): Play[] {
+        return this.plays;
     }
 
     public winner(): Player {

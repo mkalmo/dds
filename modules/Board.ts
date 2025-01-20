@@ -5,7 +5,7 @@ import Trick from "./Trick.ts";
 import { Play } from "./types.ts";
 
 export class Board {
-    public readonly cards: Deal;
+    public readonly deal: Deal;
     public lastTrickPBN: string;
     public readonly strain: Strain;
     public player: Player;
@@ -15,7 +15,7 @@ export class Board {
     public nsTricks: number;
 
     constructor(pbn: string, strain: Strain) {
-        this.cards = Deal.fromPBN(pbn);  // remaining cards in hands
+        this.deal = Deal.fromPBN(pbn);  // remaining cards in hands
         this.lastTrickPBN = pbn;
         this.strain = strain;  // e.g. spades or no trump ('H', 'S', 'N', ...)
         this.player = Player.fromString(pbn[0]);  // first to play comes directly from PBN.
@@ -30,11 +30,15 @@ export class Board {
     }
 
     isCompleted() {
-        return this.cards.cardCount() === 0;
+        return this.deal.cardCount() === 0;
+    }
+
+    getPbn(): string {
+        return this.deal.toPBN(this.player);
     }
 
     play(player: Player, card: Card) {
-        this.cards.removeCard(player, card);
+        this.deal.removeCard(player, card);
 
         this.plays.push({ player, card });
 
@@ -58,11 +62,11 @@ export class Board {
         } else {
             this.ewTricks++;
         }
-        this.lastTrickPBN = this.cards.toPBN(Player.fromString(this.player));
+        this.lastTrickPBN = this.deal.toPBN(Player.fromString(this.player));
     }
 
     isValidPlay(card: Card): boolean {
-        const cards = this.cards.getPlayerCards(this.player);
+        const cards = this.deal.getPlayerCards(this.player);
 
         if (cards.length === 0) {
             return false;
@@ -91,5 +95,29 @@ export class Board {
 
     getLastTrick(): Trick {
         return this.tricks[this.tricks.length - 1];
+    }
+
+    undoTrick(): void {
+        if (this.plays.length > 0) {
+            this.undoPlayedCards();
+        } else if (this.tricks.length > 0) {
+            this.undoLastTrick();
+        }
+    }
+
+    private undoLastTrick(): void {
+        const lastTrick = this.tricks.shift();
+        lastTrick.getPlays().forEach(
+            play => this.deal.addCard(play.player, play.card));
+        this.player = lastTrick.getLeadPlayer();
+    }
+
+    private undoPlayedCards(): void {
+        const firstToPlay = this.plays[0].player;
+        while (this.plays.length > 0) {
+            const play = this.plays.shift();
+            this.deal.addCard(play.player, play.card);
+        }
+        this.player = firstToPlay;
     }
 }

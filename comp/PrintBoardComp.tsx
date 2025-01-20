@@ -1,7 +1,7 @@
 import React from 'react';
 import PrintHandComp from "./PrintHandComp.tsx";
 import Exercise from "../modules/Exercise.ts";
-import { Players, Strain } from "../modules/constants.ts";
+import { Player, Players, Strain } from "../modules/constants.ts";
 import { formatStrain } from "./common.ts";
 import Card from "../modules/Card.ts";
 import TrickComp from "./TrickComp.tsx";
@@ -45,7 +45,7 @@ const PrintBoardComp = (props: Props) => {
                     (trick, i) => <TrickComp key={i} trick={ trick } />)  }
             </div>
             <footer className='footer'>
-                {props.exercise.target} { props.exercise.deal.getPbn() }
+                {props.exercise.target} { props.exercise.deal.getPbn(Player.West) }
             </footer>
         </div>);
 }

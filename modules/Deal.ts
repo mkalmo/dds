@@ -55,8 +55,8 @@ export default class Deal {
         return copy;
     }
 
-    getPbn(): string {
-        return this.toPBN(Player.West);
+    getPbn(player: Player): string {
+        return this.toPBN(player);
     }
 
     toPBN(player: Player) {

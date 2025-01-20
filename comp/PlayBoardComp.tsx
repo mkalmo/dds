@@ -12,14 +12,18 @@ type Props = {
 
 const wasm = new Wasm(Module);
 
+function getCorrectPlays(board: Board): Card[] {
+    const playsResult = wasm.nextPlays(
+        board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
+
+    return playsResult.getCorrectPlays();
+}
+
 function makeOpponentMove(board: Board): void {
     const opponent: Player = board.player;
     console.log('opponent', opponent);
 
-    const playsResult = wasm.nextPlays(
-        board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
-
-    const opponentCard = playsResult.getCorrectPlays()[0];
+    const opponentCard = getCorrectPlays(board)[0];
 
     console.log('opponentCard', opponentCard);
 
@@ -33,6 +37,7 @@ type State = {
     sCards: Card[],
     currentTrickLead: Player,
     currentTrickCards: Card[]
+    wrongCardPlayed: boolean
 }
 
 export default class PlayBoardComp extends Component<Props, {}> {
@@ -41,7 +46,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
         nCards: [],
         sCards: [],
         currentTrickLead: undefined,
-        currentTrickCards: []
+        currentTrickCards: [],
+        wrongCardPlayed: false
     }
 
     async componentDidMount() {
@@ -56,6 +62,10 @@ export default class PlayBoardComp extends Component<Props, {}> {
         const board = this.props.board;
 
         console.log('player: ', board.player, ' card: ', card);
+
+        this.state.wrongCardPlayed = getCorrectPlays(board)
+            .find(c => c.toString() === card.toString()) === undefined;
+
         board.play(board.player, card);
 
         if (board.isOpponentsTurn()) {
@@ -68,8 +78,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
     updateState() {
         const board = this.props.board;
 
-        this.state.nCards = board.cards.getPlayerCards(Player.North);
-        this.state.sCards = board.cards.getPlayerCards(Player.South);
+        this.state.nCards = board.deal.getPlayerCards(Player.North);
+        this.state.sCards = board.deal.getPlayerCards(Player.South);
 
         this.state.currentTrickLead = board.plays.length
             ? board.plays[0].player : undefined
@@ -103,6 +113,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
             }
         };
 
+        const errorCssClass = this.state.wrongCardPlayed ? 'error' : '';
+
         return (
             <>
             <div className='trickCount'>{board.nsTricks} / {board.ewTricks}</div>
@@ -113,7 +125,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
                                   cards={this.state.nCards}/>
                 </div>
                 <div>
-                    <div className="hand" onClick={currentTrickClickAction}>
+                    <div className={'hand ' + errorCssClass} onClick={currentTrickClickAction}>
                         <span className='small'>{ this.state.currentTrickLead }</span>
                         &nbsp;
                         { this.state.currentTrickCards.map(card => formatCard(card)) }

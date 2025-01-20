@@ -131,13 +131,13 @@ export function generateExercise(wasm: Wasm): Exercise {
         const playsResult = wasm.nextPlays(
             board.lastTrickPBN, board.strain, board.plays.map(p => p.card));
 
-        const calc = new NextPlayCalculator(playsResult, board.cards, board.strain);
+        const calc = new NextPlayCalculator(playsResult, board.deal, board.strain);
 
         const card = calc.getNextPlay();
 
         board.play(playsResult.player, card);
     }
 
-    return new Exercise(originalBoard.cards,
+    return new Exercise(originalBoard.deal,
                         originalBoard.strain, board.nsTricks, board.tricks);
 }

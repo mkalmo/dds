@@ -67,6 +67,8 @@ export const Strains: Strain[] = [
     Suit.Clubs
 ];
 
+export const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+
 export const SUIT_RANKS = {'S': 0, 'H': 1, 'D': 2, 'C': 3};
 
 export const SUIT_RANKS1 = new Map<string, number>([

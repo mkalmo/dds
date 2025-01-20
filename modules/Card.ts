@@ -1,4 +1,4 @@
-import { SUIT_RANKS1 } from "./constants.ts";
+import { RANKS, Suit, SUIT_RANKS1, Suits, SUITS } from "./constants.ts";
 
 export default class Card {
 
@@ -9,8 +9,16 @@ export default class Card {
         this.scalarRank = this.getScalarRank(rank);
     }
 
-    static parse(cardAsString: string) {
+    static parse(cardAsString: string): Card {
         const [rank, suit] = cardAsString.split('');
+
+        if (Suits.find(s => s.toString() === suit) === undefined) {
+            throw new Error(`Invalid suit: ${suit}`);
+        }
+        if (RANKS.find(r => r === rank) === undefined) {
+            throw new Error(`Invalid rank: ${suit}`);
+        }
+
         return new Card(rank, suit);
     }
 
@@ -25,12 +33,12 @@ export default class Card {
     }
 
     private getScalarRank(rankText: string): number {
-        const index = '23456789TJQKA'.split('').indexOf(rankText);
+        const index = RANKS.indexOf(rankText);
 
         if (index === -1) {
             throw 'Invalid card symbol: ' + rankText;
         } else {
-            return index + 1;
+            return index + 2;
         }
     }
 
