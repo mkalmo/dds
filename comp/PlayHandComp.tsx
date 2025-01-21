@@ -26,8 +26,8 @@ const PlayHandComp = (props: Props) => {
     return (
         <div className="hand">
             &#9824; {suitLinks(Suit.Spades)} <br/>
-            &#9829; {suitLinks(Suit.Harts)}<br/>
-            &#9830; {suitLinks(Suit.Diamonds)}<br/>
+            <span className='red'>&#9829;</span> {suitLinks(Suit.Harts)}<br/>
+            <span className='red'>&#9830;</span> {suitLinks(Suit.Diamonds)}<br/>
             &#9827; {suitLinks(Suit.Clubs)}<br/>
         </div>
     );

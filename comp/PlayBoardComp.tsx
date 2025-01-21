@@ -16,6 +16,7 @@ type State = {
     currentTrickLead: Player,
     playedCards: Card[]
     wrongCardPlayed: boolean
+    showLastTrick: boolean
 }
 
 export default class PlayBoardComp extends Component<Props, {}> {
@@ -25,7 +26,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
         sCards: [],
         currentTrickLead: undefined,
         playedCards: [],
-        wrongCardPlayed: false
+        wrongCardPlayed: false,
+        showLastTrick: false
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -58,11 +60,12 @@ export default class PlayBoardComp extends Component<Props, {}> {
         board.play(board.player, card);
 
         if (this.state.wrongCardPlayed) {
-            console.log('wrong card played');
             this.updateState();
         } else {
             this.updateBoard(board);
         }
+
+        this.state.showLastTrick = true;
     }
 
     updateBoard(board: Board): void {
@@ -91,9 +94,9 @@ export default class PlayBoardComp extends Component<Props, {}> {
             ? board.plays[0].player : undefined
         this.state.playedCards = board.plays.map(p => p.card);
 
-        if (this.opponentPlayedTricksLastCard()) {
+        if (this.opponentPlayedTricksLastCard() && this.state.showLastTrick) {
 
-            // show last trick instead of board state
+            // Show last trick, otherwise can't see opponents last play
             this.state.currentTrickLead =
                 board.getLastTrick().getLeadPlayer();
             this.state.playedCards = board.getLastTrick().cards();
@@ -124,8 +127,10 @@ export default class PlayBoardComp extends Component<Props, {}> {
             <span>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
 
-        const currentTrickClickAction =
-            () => this.updateBoard(board);
+        const currentTrickClickAction = () => {
+                    this.state.showLastTrick = false;
+                    this.updateBoard(board);
+                };
 
         const errorCssClass = this.state.wrongCardPlayed ? 'error' : '';
 

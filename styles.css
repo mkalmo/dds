@@ -12,6 +12,10 @@ body {
     color: lightgrey;
 }
 
+.hand .red {
+    color: rosybrown;
+}
+
 .frames {
     display: grid;
     grid-template-rows: auto 2.5rem;
