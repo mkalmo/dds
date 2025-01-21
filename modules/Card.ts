@@ -46,4 +46,8 @@ export default class Card {
         return this.rank + this.suit;
     }
 
+    equals(other: Card): boolean {
+        return this.rank === other.rank && this.suit === other.suit;
+    }
+
 }

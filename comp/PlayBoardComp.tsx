@@ -2,37 +2,12 @@ import React, { Component, useState } from 'react';
 import { Player, Strain } from "../modules/constants.ts";
 import PlayHandComp from "./PlayHandComp.tsx";
 import Card from "../modules/Card.ts";
-import { Board } from "../modules/Board.ts";
+import Board from "../modules/Board.ts";
 import Wasm from "../modules/Wasm.ts";
 import { formatStrain } from "./common.ts";
 
 type Props = {
     board: Board
-}
-
-const wasm = new Wasm(Module);
-
-function getCorrectPlays(board: Board): Card[] {
-    console.log(board.getTrickStartPbn());
-    console.log(board.plays.map(p => p.card.toString()).join(', '));
-
-    const playsResult = wasm.nextPlays(
-        board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
-
-    return playsResult.getCorrectPlays();
-}
-
-function makeOpponentMove(board: Board): void {
-    const opponent: Player = board.player;
-    console.log('opponent', opponent);
-
-    const opponentCard = getCorrectPlays(board)[0];
-
-    console.log('opponentCard', opponentCard);
-
-    board.play(opponent, opponentCard);
-
-    console.log('player', board.player);
 }
 
 type State = {
@@ -60,20 +35,14 @@ export default class PlayBoardComp extends Component<Props, {}> {
 
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
-                console.log('undo trick');
                 board.undoTrick();
-                if (board.isOpponentsTurn()) {
-                    makeOpponentMove(board);
-                }
-                this.updateState();
+                this.updateBoard(board);
             }
         }
 
         window.addEventListener('keyup', this.undoKeyHandler);
 
-        makeOpponentMove(board);
-
-        this.updateState();
+        this.updateBoard(board);
     }
 
     componentWillUnmount() {
@@ -83,16 +52,30 @@ export default class PlayBoardComp extends Component<Props, {}> {
     playCard(card: Card): void {
         const board = this.props.board;
 
-        console.log('player: ', board.player, ' card: ', card);
-
         this.state.wrongCardPlayed = getCorrectPlays(board)
-            .find(c => c.toString() === card.toString()) === undefined;
+            .find(c => c.equals(card)) === undefined;
 
         board.play(board.player, card);
 
-        if (board.isOpponentsTurn()) {
-            makeOpponentMove(board);
+        if (this.state.wrongCardPlayed) {
+            this.updateState();
+        } else {
+            this.updateBoard(board);
         }
+    }
+
+    updateBoard(board: Board): void {
+        this.state.wrongCardPlayed = false;
+
+        if (!board.isOpponentsTurn()) {
+            this.updateState();
+            return;
+        }
+
+        const opponent: Player = board.player;
+        const opponentCard = getCorrectPlays(board)[0];
+
+        board.play(opponent, opponentCard);
 
         this.updateState();
     }
@@ -128,12 +111,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
             <span>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
 
-        const currentTrickClickAction = () => {
-            if (board.isOpponentsTurn()) {
-                makeOpponentMove(board);
-                this.updateState();
-            }
-        };
+        const currentTrickClickAction =
+            () => this.updateBoard(board);
 
         const errorCssClass = this.state.wrongCardPlayed ? 'error' : '';
 
@@ -161,4 +140,11 @@ export default class PlayBoardComp extends Component<Props, {}> {
             </div>
             </>);
     }
+}
+
+function getCorrectPlays(board: Board): Card[] {
+    const playsResult = new Wasm(Module).nextPlays(
+        board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
+
+    return playsResult.getCorrectPlays();
 }

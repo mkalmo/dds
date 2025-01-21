@@ -4,7 +4,7 @@ import Card from "./Card.ts";
 import Trick from "./Trick.ts";
 import { Play } from "./types.ts";
 
-export class Board {
+export default class Board {
     public deal: Deal;
     public player: Player;
     public plays: Play[];
@@ -100,6 +100,7 @@ export class Board {
             this.undoPlayedCards();
         } else if (this.tricks.length > 0) {
             this.trickStartPbns.pop();
+            this.tricks.pop();
 
             this.undoPlayedCards();
         }

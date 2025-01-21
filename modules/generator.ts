@@ -1,7 +1,7 @@
 import { Player, Suit } from "./constants.ts";
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
-import { Board } from "./Board.ts";
+import Board from "./Board.ts";
 import Exercise from "./Exercise.ts";
 import Wasm from "./Wasm.ts";
 import NextPlayCalculator from "./NextPlayCalculator.ts";

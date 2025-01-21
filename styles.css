@@ -3,6 +3,11 @@
     size: a4 landscape;
 }
 
+body {
+    background-color: black;
+    color: lightgrey;
+}
+
 .frames {
     display: grid;
     grid-template-rows: auto 2.5rem;

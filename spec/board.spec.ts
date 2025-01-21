@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import { Board } from "../modules/Board.ts";
+import Board from "../modules/Board.ts";
 import { Player, Suit } from "../modules/constants.ts";
 import Card from "../modules/Card.ts";
 
@@ -91,4 +91,12 @@ test('Board supports undoing last trick', () => {
         .toBe('S:...A ...J ...Q ...K');
 
     board.undoTrick();
+
+    expect(board.getTrickStartPbn())
+        .toBe(pbn);
+
+    board.undoTrick();
+
+    expect(board.getTrickStartPbn())
+        .toBe(pbn);
 });
