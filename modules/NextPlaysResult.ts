@@ -33,9 +33,15 @@ export default class NextPlaysResult {
 
         const max = Math.max(...scores);
 
+        const playToCards = (play: Play) =>
+            [play.rank, ...play.equals]
+                .sort()
+                .map(rank => new Card(rank, play.suit));
+
         return this.plays
             .filter(play => play.score === max)
-            .map(play => new Card(play.rank, play.suit));
+            .flatMap(play => playToCards(play));
     }
+
 
 }

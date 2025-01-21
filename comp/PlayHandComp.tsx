@@ -10,7 +10,7 @@ type Props = {
 
 const PlayHandComp = (props: Props) => {
 
-    const className = (c: Card) => props.isValidPlayFunc(c) ? '' : 'inactive';
+    const className = (c: Card) => props.isValidPlayFunc(c) ? 'active' : '';
     const action = (c: Card) => props.isValidPlayFunc(c) && props.cardClickAction(c);
 
     const suitLinks = (suit: Suit) => {

@@ -1,4 +1,4 @@
-import { Player, Suit } from "./constants.ts";
+import { Player, RANKS, Suit } from "./constants.ts";
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
 import Board from "./Board.ts";
@@ -6,14 +6,13 @@ import Exercise from "./Exercise.ts";
 import Wasm from "./Wasm.ts";
 import NextPlayCalculator from "./NextPlayCalculator.ts";
 
-const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 const suits = ['C', 'D', 'H', 'S'];
 const hcpMap: any = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
 
 function getDeck() {
     const deck = [];
     for (let suit of suits) {
-        for (let rank of ranks) {
+        for (let rank of RANKS) {
             deck.push(rank + suit);
         }
     }
@@ -113,7 +112,7 @@ export function generateBoard(wasm: Wasm): Board {
     // const deal = generateDeal(11, 14);
     // const pbn = deal.toPBN(deal.opener);
 
-    const pbn = 'W:KJ942.9.AK83.A74 A.AJ3.J9642.J932 T8753.T8652.T5.5 Q6.KQ74.Q7.KQT86';
+    const pbn = 'W:AT97.Q5.Q2.AKT72 KJ86.JT6.AJ987.J 5432.9873.T43.95 Q.AK42.K65.Q8643';
     const deal = Deal.fromPBN(pbn);
 
     const strain = wasm.calcDDTable(pbn).getBestStrain();

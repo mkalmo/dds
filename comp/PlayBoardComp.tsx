@@ -14,7 +14,7 @@ type State = {
     nCards: Card[]
     sCards: Card[],
     currentTrickLead: Player,
-    currentTrickCards: Card[]
+    playedCards: Card[]
     wrongCardPlayed: boolean
 }
 
@@ -24,7 +24,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
         nCards: [],
         sCards: [],
         currentTrickLead: undefined,
-        currentTrickCards: [],
+        playedCards: [],
         wrongCardPlayed: false
     }
 
@@ -38,7 +38,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
                 board.undoTrick();
                 this.updateBoard(board);
             }
-        }
+        };
 
         window.addEventListener('keyup', this.undoKeyHandler);
 
@@ -58,6 +58,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
         board.play(board.player, card);
 
         if (this.state.wrongCardPlayed) {
+            console.log('wrong card played');
             this.updateState();
         } else {
             this.updateBoard(board);
@@ -88,18 +89,30 @@ export default class PlayBoardComp extends Component<Props, {}> {
 
         this.state.currentTrickLead = board.plays.length
             ? board.plays[0].player : undefined
-        this.state.currentTrickCards = board.plays.map(p => p.card);
+        this.state.playedCards = board.plays.map(p => p.card);
 
-        if (board.isOpponentsTurn()
-            && this.state.currentTrickCards.length === 0
-            && board.getLastTrick() !== undefined) {
+        if (this.opponentPlayedTricksLastCard()) {
 
+            // show last trick instead of board state
             this.state.currentTrickLead =
                 board.getLastTrick().getLeadPlayer();
-                this.state.currentTrickCards = board.getLastTrick().cards();
+            this.state.playedCards = board.getLastTrick().cards();
         }
 
         this.setState({});
+    }
+
+    opponentPlayedTricksLastCard() {
+        const board = this.props.board;
+
+        if (this.state.playedCards.length !== 0
+            || board.getLastTrick() === undefined) {
+            return false;
+        }
+
+        const firstPlayer = board.getLastTrick().getPlays()[0].player;
+
+        return firstPlayer === Player.North || firstPlayer === Player.South;
     }
 
     render() {
@@ -118,7 +131,10 @@ export default class PlayBoardComp extends Component<Props, {}> {
 
         return (
             <>
-            <div className='trickCount'>{board.getNsTrickCount()} / {board.getEwTrickCount()}</div>
+            <div className='trickCount'>
+                {formatStrain(board.strain)} &nbsp;
+                {board.getNsTrickCount()} / {board.getEwTrickCount()}
+            </div>
             <div className="play-table">
                 <div>
                     <PlayHandComp cardClickAction={c => this.playCard(c)}
@@ -129,7 +145,7 @@ export default class PlayBoardComp extends Component<Props, {}> {
                     <div className={'hand ' + errorCssClass} onClick={currentTrickClickAction}>
                         <span className='small'>{ this.state.currentTrickLead }</span>
                         &nbsp;
-                        { this.state.currentTrickCards.map(card => formatCard(card)) }
+                        { this.state.playedCards.map(card => formatCard(card)) }
                     </div>
                 </div>
                 <div>

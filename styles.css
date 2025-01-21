@@ -5,6 +5,10 @@
 
 body {
     background-color: black;
+    color: gray;
+}
+
+.active {
     color: lightgrey;
 }
 
@@ -28,10 +32,6 @@ body {
 
 .play-table > div {
     justify-self: center;
-}
-
-.inactive {
-    color: gray;
 }
 
 .grid-table {
