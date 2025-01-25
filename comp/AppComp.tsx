@@ -5,6 +5,7 @@ import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Repository from "../modules/Repository.ts";
 import Wasm from "../modules/Wasm.ts";
+import PrintBoardListComp from "./PrintBoardListComp.tsx";
 
 const AppComp = () => {
 
@@ -18,24 +19,14 @@ const AppComp = () => {
         return new Board(pbn, strain);
     };
 
-    // const exercises = Array.from({ length: 10 }).map((_, i) => {
-    //     console.log('ex:', i);
-    //     return generateExercise(new Wasm(Module));
-    // });
-
-    // const exercises: Exercise[] = [];
-
     return (
         <>
-            {/*{ exercises.map((ex, i) =>*/}
-            {/*    <PrintBoardComp num={i + 1}*/}
-            {/*                    key={i}*/}
-            {/*                    exercise={ex} />)  }*/}
-            {/*<PlayBoardComp wasm={new Wasm(Module)} />*/}
-
             <Switch>
                 <Route path="/play">
                     <PlayBoardComp key={location.pathname} board={getPlayBoard()} />
+                </Route>
+                <Route path="/print/:count">
+                    <PrintBoardListComp />
                 </Route>
                 <Route path="/">
                     <ControlsComp />

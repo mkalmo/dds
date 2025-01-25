@@ -115,11 +115,11 @@ export function createBoard(pbn: string, wasm: Wasm): Board {
 }
 
 export function generateBoard(wasm: Wasm): Board {
-    // const deal = generateDeal(11, 14);
-    // const pbn = deal.toPBN(deal.opener);
+    const deal = generateDeal(11, 14);
+    const pbn = deal.toPBN(deal.opener);
 
-    const pbn = 'W:AT97.Q5.Q2.AKT72 KJ86.JT6.AJ987.J 5432.9873.T43.95 Q.AK42.K65.Q8643';
-    const deal = Deal.fromPBN(pbn);
+    // const pbn = 'W:AT97.Q5.Q2.AKT72 KJ86.JT6.AJ987.J 5432.9873.T43.95 Q.AK42.K65.Q8643';
+    // const deal = Deal.fromPBN(pbn);
 
     const strain = wasm.calcDDTable(pbn).getBestStrain();
 
