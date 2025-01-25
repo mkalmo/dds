@@ -28,6 +28,15 @@ body {
     /*border: 1px solid black;*/
 }
 
+.controls {
+    display: flex;
+    justify-content: center;
+}
+
+.controls > div {
+    width: 40rem;
+}
+
 .play-table {
     display: grid;
     grid-template-rows: 17rem 8rem 17rem;

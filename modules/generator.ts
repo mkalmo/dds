@@ -108,6 +108,12 @@ export function generateDeal(nPoints: number, sPoints: number): Deal {
     return deal;
 }
 
+export function createBoard(pbn: string, wasm: Wasm): Board {
+    const strain = wasm.calcDDTable(pbn).getBestStrain();
+
+    return new Board(pbn, strain);
+}
+
 export function generateBoard(wasm: Wasm): Board {
     // const deal = generateDeal(11, 14);
     // const pbn = deal.toPBN(deal.opener);
