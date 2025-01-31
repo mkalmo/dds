@@ -11,8 +11,8 @@
     </script>
     <script src="out.js"></script>
 
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.15.1/system.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./libs/babel.min.js"></script>
+    <script src="./libs/system.min.js"></script>
 
 </head>
 <body>
@@ -33,7 +33,15 @@
 
 <script type="module" src="systemjs-setup.js"></script>
 
-<script type="systemjs-module" src="index.tsx"></script>
+<script>
+    (async () => {
+        // enforce loading order
+        await System.import('react');
+        await System.import('react-dom');
+        await System.import('react-router-dom');
+        await System.import('./index.tsx');
+    })();
+</script>
 
 <div id="root">
 

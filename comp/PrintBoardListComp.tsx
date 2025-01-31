@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
-import Repository from "../modules/Repository.ts";
+import React from 'react';
+import { useParams } from "react-router-dom";
 import { generateExercise } from "../modules/generator.ts";
 import Wasm from "../modules/Wasm.ts";
 import PrintBoardComp from "./PrintBoardComp.tsx";

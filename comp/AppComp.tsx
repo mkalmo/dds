@@ -12,7 +12,7 @@ const AppComp = () => {
     const location = useLocation();
 
     const getPlayBoard = () => {
-        const pbn = new Repository().readPbn();
+        const pbn = new Repository().readPbn() || 'W:2... 3... 4... 5...';
 
         const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain()
 

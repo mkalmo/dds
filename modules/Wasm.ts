@@ -26,6 +26,10 @@ export default class Wasm {
     calcDDTable(pbn: string): DDTableResult {
         const raw = JSON.parse(this.calcDDTableWasm(pbn));
 
+        if (raw['error']) {
+            throw new Error(`${raw['message']}. pnb: '${pbn}'`);
+        }
+
         return DDTableResult.fromRaw(raw);
     }
 
