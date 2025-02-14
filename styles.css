@@ -102,8 +102,8 @@ body {
 
 .tricks .card {
     display: inline-block;
-    font-size: 1.2rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .tricks .lead {
@@ -114,12 +114,19 @@ body {
     font-size: 0.8rem;
 }
 
-.tricks .card .winner:before {
-    content: '_';
+.tricks .card .winner {
+    text-decoration: none;
+    width: 1rem;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
-.tricks .card.trump {
-    text-decoration: underline;
+.tricks .card .trump {
+    text-decoration: none;
+    width: 1rem;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: gray;
 }
 
 footer {
