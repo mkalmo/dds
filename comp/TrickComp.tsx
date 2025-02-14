@@ -11,14 +11,20 @@ type Props = {
 
 const TrickComp = (props: Props) => {
 
-    const formatCard = (c: Card) => <React.Fragment key={c.toString()}>
-        {c.rank}
-        <span>{ formatStrain(c.suit as Strain) } </span>
-    </React.Fragment>;
+    const formatCard = (c: Card) => {
+        const cssClassTrump = c.suit === props.trick.strain ? 'card trump' : 'card';
+        const cssClassWinner = c.equals(props.trick.winnerCard()) ? 'winner' : '';
+
+        return <div className={ cssClassTrump } key={c.toString()}>
+            <div className={ cssClassWinner }></div>
+            <span>{c.rank}</span>
+            <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
+        </div>;
+    }
 
     return (
         <div>
-            <span>{ props.trick.getLeadPlayer() }&nbsp;</span>
+            <span className='lead'>{ props.trick.getLeadPlayer() }&nbsp;</span>
             { props.trick.cards().map(c => formatCard(c)) }
         </div>);
 }

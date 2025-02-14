@@ -95,20 +95,34 @@ body {
 }
 
 .tricks {
-    font-family: "Ubuntu Mono";
+    font-family: "Ubuntu Mono", monospace;
     font-size: 1.4rem;
     white-space: pre;
 }
 
-.tricks span {
+.tricks .card {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.tricks .lead {
+    font-size: 0.7rem;
+}
+
+.tricks .card .suit {
     font-size: 0.8rem;
+}
+
+.tricks .card .winner:before {
+    content: '_';
+}
+
+.tricks .card.trump {
+    text-decoration: underline;
 }
 
 footer {
     padding-top: 1.5rem;
     font-size: 0.5rem;
-}
-
-.tricks div {
-    margin-bottom: 1.1rem;
 }

@@ -6,7 +6,7 @@ export default class Trick {
 
     private readonly plays: Play[] = [];
 
-    constructor(private readonly strain: string, plays: Play[]) {
+    constructor(public readonly strain: string, plays: Play[]) {
 
         if (plays.length > 4) {
             throw Error('incomplete trick');
@@ -35,6 +35,11 @@ export default class Trick {
 
     getPlays(): Play[] {
         return this.plays;
+    }
+
+    public winnerCard(): Card {
+        const winner = this.winner();
+        return this.plays.find(p => p.player === winner).card;
     }
 
     public winner(): Player {
