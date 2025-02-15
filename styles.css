@@ -103,7 +103,7 @@ body {
 .tricks .card {
     display: inline-block;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .tricks .lead {
@@ -117,8 +117,9 @@ body {
 .tricks .card .winner {
     text-decoration: none;
     width: 1rem;
+    font-size: 0.5rem;
     border-bottom-width: 1px;
-    border-bottom-style: solid;
+    border-bottom-style: dotted;
 }
 
 .tricks .card .trump {

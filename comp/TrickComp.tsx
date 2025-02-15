@@ -14,9 +14,10 @@ const TrickComp = (props: Props) => {
     const formatCard = (c: Card) => {
         const cssClassTrump = c.suit === props.trick.strain ? 'trump' : '';
         const cssClassWinner = c.equals(props.trick.winnerCard()) ? 'winner' : '';
+        const winner = c.equals(props.trick.winnerCard()) ? props.trick.winner()[0] : '';
 
         return <div className='card' key={c.toString()}>
-            <div className={ cssClassWinner }></div>
+            <div className={ cssClassWinner }>{ winner }</div>
             <span>{c.rank}</span>
             <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
             <div className={ cssClassTrump }></div>
