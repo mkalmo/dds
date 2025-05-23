@@ -115,13 +115,21 @@ export function createBoard(pbn: string, wasm: Wasm): Board {
 }
 
 export function generateBoard(wasm: Wasm): Board {
-    const deal = generateDeal(11, 14);
+    const deal = generateDeal(5, 19);
     const pbn = deal.toPBN(deal.opener);
 
-    // const pbn = 'W:AT97.Q5.Q2.AKT72 KJ86.JT6.AJ987.J 5432.9873.T43.95 Q.AK42.K65.Q8643';
-    // const deal = Deal.fromPBN(pbn);
+    // const pbn = 'W:AJT83.63.J873.86 2.J98.KT62.QJ943 74.542.AQ95.KT75 KQ965.AKQT7.4.A2';
+    // const deal = Dea
+    // l.fromPBN(pbn);
 
     const strain = wasm.calcDDTable(pbn).getBestStrain();
+
+    const playerCards = deal.getPlayerCards(Player.North);
+    if (playerCards.filter(c => c.suit === strain).length > 3) {
+        return generateBoard(wasm);
+    } else if (strain === 'N' && Math.random() * 10 < 7) {
+        return generateBoard(wasm);
+    }
 
     return new Board(pbn, strain);
 }
@@ -132,13 +140,20 @@ export function generateExercise(wasm: Wasm): Exercise {
 
 
     const board = new Board(originalBoard.getTrickStartPbn(), originalBoard.strain);
+    let first = true;
     while (!board.isCompleted()) {
         const playsResult = wasm.nextPlays(
             board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
 
         const calc = new NextPlayCalculator(playsResult, board.deal, board.strain);
 
-        const card = calc.getNextPlay();
+        let card = calc.getNextPlay();
+
+        // if (first) {
+        //     console.log(card);
+        //     first = false;
+        //     card = new Card('6', 'C');
+        // }
 
         board.play(playsResult.player, card);
     }

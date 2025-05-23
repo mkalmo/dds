@@ -19,7 +19,7 @@ type State = {
     showLastTrick: boolean
 }
 
-export default class PlayBoardComp extends Component<Props, {}> {
+export default class PlayBoardComp extends Component<Props, State> {
 
     state: State = {
         nCards: [],
@@ -54,22 +54,22 @@ export default class PlayBoardComp extends Component<Props, {}> {
     playCard(card: Card): void {
         const board = this.props.board;
 
-        this.state.wrongCardPlayed = getCorrectPlays(board)
+        const wrongCardPlayed = getCorrectPlays(board)
             .find(c => c.equals(card)) === undefined;
 
         board.play(board.player, card);
 
-        if (this.state.wrongCardPlayed) {
+        if (wrongCardPlayed) {
             this.updateState();
         } else {
             this.updateBoard(board);
         }
 
-        this.state.showLastTrick = true;
+        this.setState({ wrongCardPlayed, showLastTrick: true });
     }
 
     updateBoard(board: Board): void {
-        this.state.wrongCardPlayed = false;
+        this.setState({ wrongCardPlayed: false });
 
         if (!board.isOpponentsTurn()) {
             this.updateState();
@@ -87,22 +87,22 @@ export default class PlayBoardComp extends Component<Props, {}> {
     updateState() {
         const board = this.props.board;
 
-        this.state.nCards = board.deal.getPlayerCards(Player.North);
-        this.state.sCards = board.deal.getPlayerCards(Player.South);
+        const nCards = board.deal.getPlayerCards(Player.North);
+        const sCards = board.deal.getPlayerCards(Player.South);
 
-        this.state.currentTrickLead = board.plays.length
+        let currentTrickLead = board.plays.length
             ? board.plays[0].player : undefined
-        this.state.playedCards = board.plays.map(p => p.card);
+        let playedCards = board.plays.map(p => p.card);
 
         if (this.opponentPlayedTricksLastCard() && this.state.showLastTrick) {
 
             // Show last trick, otherwise can't see opponents last play
-            this.state.currentTrickLead =
+            currentTrickLead =
                 board.getLastTrick().getLeadPlayer();
-            this.state.playedCards = board.getLastTrick().cards();
+            playedCards = board.getLastTrick().cards();
         }
 
-        this.setState({});
+        this.setState({ nCards, sCards, currentTrickLead, playedCards });
     }
 
     opponentPlayedTricksLastCard() {
@@ -127,10 +127,8 @@ export default class PlayBoardComp extends Component<Props, {}> {
             <span>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
 
-        const currentTrickClickAction = () => {
-                    this.state.showLastTrick = false;
-                    this.updateBoard(board);
-                };
+        const currentTrickClickAction = () =>
+                this.setState( { showLastTrick: false }, () => this.updateBoard(board));
 
         const errorCssClass = this.state.wrongCardPlayed ? 'error' : '';
 
