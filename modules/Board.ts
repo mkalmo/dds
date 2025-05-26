@@ -96,17 +96,11 @@ export default class Board {
     }
 
     undoTrick(): void {
-        if (this.plays.length > 0) {
-            this.undoPlayedCards();
-        } else if (this.tricks.length > 0) {
+        if (this.tricks.length > 0) {
             this.trickStartPbns.pop();
             this.tricks.pop();
-
-            this.undoPlayedCards();
         }
-    }
 
-    private undoPlayedCards(): void {
         const pbn = this.getTrickStartPbn();
 
         this.deal = Deal.fromPBN(pbn);

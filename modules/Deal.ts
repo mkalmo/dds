@@ -1,7 +1,5 @@
 import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "./constants.ts";
 import Card from "./Card.ts";
-import Hand from "./Hand.ts";
-import { Play } from "./types.ts";
 
 export default class Deal {
 

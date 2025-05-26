@@ -37,8 +37,14 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
+                this.setState({wrongCardPlayed: false},
+                    () => this.refreshBoard());
+
                 board.undoTrick();
-                this.updateBoard(board);
+
+                this.makeOpponentMoveIfNeeded();
+
+                this.refreshBoard();
             }
         };
 
@@ -60,19 +66,33 @@ export default class PlayBoardComp extends Component<Props, State> {
         board.play(board.player, card);
 
         if (wrongCardPlayed) {
-            this.updateState();
+            this.setState({wrongCardPlayed}, () => this.refreshBoard());
+
         } else {
-            this.updateBoard(board);
+            this.makeOpponentMoveIfNeeded();
+
+            this.refreshBoard();
+        }
+    }
+
+    makeOpponentMoveIfNeeded(): void {
+        const board = this.props.board;
+
+        if (!board.isOpponentsTurn()) {
+            return;
         }
 
-        this.setState({ wrongCardPlayed, showLastTrick: true });
+        const opponent: Player = board.player;
+        const opponentCard = getCorrectPlays(board)[0];
+
+        board.play(opponent, opponentCard);
     }
 
     updateBoard(board: Board): void {
         this.setState({ wrongCardPlayed: false });
 
         if (!board.isOpponentsTurn()) {
-            this.updateState();
+            this.refreshBoard();
             return;
         }
 
@@ -81,10 +101,10 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         board.play(opponent, opponentCard);
 
-        this.updateState();
+        this.refreshBoard();
     }
 
-    updateState() {
+    refreshBoard() {
         const board = this.props.board;
 
         const nCards = board.deal.getPlayerCards(Player.North);
@@ -94,8 +114,7 @@ export default class PlayBoardComp extends Component<Props, State> {
             ? board.plays[0].player : undefined
         let playedCards = board.plays.map(p => p.card);
 
-        if (this.opponentPlayedTricksLastCard() && this.state.showLastTrick) {
-
+        if (board.plays.length === 0 && board.getLastTrick() !== undefined) {
             // Show last trick, otherwise can't see opponents last play
             currentTrickLead =
                 board.getLastTrick().getLeadPlayer();
@@ -105,17 +124,16 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.setState({ nCards, sCards, currentTrickLead, playedCards });
     }
 
-    opponentPlayedTricksLastCard() {
+    iPlayedTricksLastCard() {
         const board = this.props.board;
 
-        if (this.state.playedCards.length !== 0
-            || board.getLastTrick() === undefined) {
+        if (board.getLastTrick() === undefined) {
             return false;
         }
 
-        const firstPlayer = board.getLastTrick().getPlays()[0].player;
+        const lastPlayer = board.getLastTrick().getPlays()[3].player;
 
-        return firstPlayer === Player.North || firstPlayer === Player.South;
+        return lastPlayer === Player.North || lastPlayer === Player.South;
     }
 
     render() {
