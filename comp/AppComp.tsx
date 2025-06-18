@@ -4,8 +4,10 @@ import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Repository from "../modules/Repository.ts";
-import Wasm from "../modules/Wasm.ts";
+import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import PrintBoardListComp from "./PrintBoardListComp.tsx";
+
+declare var Module: DDSModule;
 
 const AppComp = () => {
 

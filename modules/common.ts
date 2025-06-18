@@ -1,4 +1,4 @@
-import { Strain, Strains } from "../modules/constants.ts";
+import { Strain, Strains } from "./constants.ts";
 
 export function formatStrain(suit: Strain): string {
     const index = Strains.indexOf(suit);

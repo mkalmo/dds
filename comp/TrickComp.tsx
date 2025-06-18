@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from "../modules/Card.ts";
 import Trick from "../modules/Trick.ts";
-import { formatStrain } from "./common.ts";
+import { formatStrain } from "../modules/common.ts";
 import { Strain } from "../modules/constants.ts";
 
 type Props = {

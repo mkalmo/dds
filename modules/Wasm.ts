@@ -3,14 +3,20 @@ import Card from "./Card.ts";
 import NextPlaysResult from "./NextPlaysResult.ts";
 import { Strain } from "./constants.ts";
 
+export interface DDSModule {
+    cwrap: (name: string, type: string, paramTypes: string[]) => any;
+    _malloc: (value: number) => any;
+    setValue: () => any;
+}
+
 export default class Wasm {
 
     private readonly solveBoardWasm: any;
     private readonly calcDDTableWasm: any;
-    private readonly mallocWasm: any;
+    private readonly mallocWasm: (value: number) => any;
     private readonly setValueWasm: any;
 
-    constructor(public module: any) {
+    constructor(public module: DDSModule) {
 
         this.solveBoardWasm = module.cwrap('solve',
             'string',

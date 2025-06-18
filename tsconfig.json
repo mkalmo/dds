@@ -2,9 +2,7 @@
   "compilerOptions": {
     "types" : ["node"],
     "target": "es6",
-    "lib": [
-      "es2021"
-    ],
+    "lib": ["dom", "es2021"],
     "moduleResolution": "node",
     "sourceMap": false,
     "removeComments": true,
@@ -12,9 +10,9 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "allowJs": false,
-    "suppressImplicitAnyIndexErrors": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }

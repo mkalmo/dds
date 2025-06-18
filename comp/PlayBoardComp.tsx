@@ -3,8 +3,10 @@ import { Player, Strain } from "../modules/constants.ts";
 import PlayHandComp from "./PlayHandComp.tsx";
 import Card from "../modules/Card.ts";
 import Board from "../modules/Board.ts";
-import Wasm from "../modules/Wasm.ts";
-import { formatStrain } from "./common.ts";
+import Wasm, { DDSModule } from "../modules/Wasm.ts";
+import { formatStrain } from "../modules/common.ts";
+
+declare var Module: DDSModule;
 
 type Props = {
     board: Board

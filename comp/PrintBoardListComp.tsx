@@ -1,8 +1,10 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
 import { generateExercise } from "../modules/generator.ts";
-import Wasm from "../modules/Wasm.ts";
+import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import PrintBoardComp from "./PrintBoardComp.tsx";
+
+declare var Module: DDSModule;
 
 const PrintBoardListComp = () => {
 

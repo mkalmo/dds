@@ -2,7 +2,7 @@ import React from 'react';
 import PrintHandComp from "./PrintHandComp.tsx";
 import Exercise from "../modules/Exercise.ts";
 import { Player, Players, Strain } from "../modules/constants.ts";
-import { formatStrain } from "./common.ts";
+import { formatStrain } from "../modules/common.ts";
 import Card from "../modules/Card.ts";
 import TrickComp from "./TrickComp.tsx";
 
