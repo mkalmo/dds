@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
-import Repository from "../modules/Repository.ts";
 
 const ControlsComp = () => {
 
@@ -10,9 +9,10 @@ const ControlsComp = () => {
     const [count, setCount] = useState(1);
 
     const playFunc = () => {
-        new Repository().storePbn(pbn);
-
-        history.push('/play');
+        history.push({
+            pathname: '/play',
+            search: `?pbn=${encodeURIComponent(pbn)}`
+        });
     };
 
     return (
