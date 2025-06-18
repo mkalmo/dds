@@ -81,9 +81,11 @@ test('Board supports undoing last trick', () => {
 
     board.play(Player.South, Card.parse('AC'));
     board.play(Player.West, Card.parse('JC'));
+    board.play(Player.North, Card.parse('QC'));
+    board.play(Player.East, Card.parse('KC'));
 
     expect(board.getTrickStartPbn())
-        .toBe('S:...A ...J ...Q ...K');
+        .toBe('S:... ... ... ...');
 
     board.undoTrick();
 
