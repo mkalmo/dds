@@ -45,7 +45,8 @@ export default class Wasm {
         const result = JSON.parse(this.solveBoardWasm(pbn, strain, plays.length, playsPtr));
 
         if (result['error']) {
-            throw Error('nextPlays(): ' + result['message']);
+            throw Error('nextPlays(): ' + result['message'] + ", "
+                + pbn + ", " + JSON.stringify(plays));
         }
 
         return NextPlaysResult.fromRaw(result);

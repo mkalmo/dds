@@ -97,6 +97,7 @@ export default class Board {
 
     undoTrick(): void {
         if (this.tricks.length > 0) {
+            console.log('pop');
             this.trickStartPbns.pop();
             this.tricks.pop();
         }

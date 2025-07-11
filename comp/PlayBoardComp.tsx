@@ -39,6 +39,9 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
+
+                console.log('undo');
+
                 this.setState({wrongCardPlayed: false},
                     () => this.refreshBoard());
 
@@ -86,6 +89,8 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const opponent: Player = board.player;
         const opponentCard = getCorrectPlays(board)[0];
+
+        console.log('opponent: ', opponentCard);
 
         board.play(opponent, opponentCard);
     }

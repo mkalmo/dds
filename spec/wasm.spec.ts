@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals';
-import Card from "../modules/Card.ts";
 import Wasm from "../modules/Wasm.ts";
 // @ts-ignore
 import * as wasmModule from '../out.js';
