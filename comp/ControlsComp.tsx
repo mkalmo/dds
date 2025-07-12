@@ -87,6 +87,10 @@ const ControlsComp = () => {
                         />
                         <Link to={`print/${count}`}>Print</Link>
                     </div>
+                    <br />
+                    <div>
+                        <Link to="/boards">View Saved Boards</Link>
+                    </div>
                 </div>
             </div>
 

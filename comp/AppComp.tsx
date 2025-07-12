@@ -5,6 +5,7 @@ import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import PrintBoardListComp from "./PrintBoardListComp.tsx";
+import BoardListComp from "./BoardListComp.tsx";
 
 declare var Module: DDSModule;
 
@@ -33,6 +34,9 @@ const AppComp = () => {
                 </Route>
                 <Route path="/print/:count">
                     <PrintBoardListComp />
+                </Route>
+                <Route path="/boards">
+                    <BoardListComp />
                 </Route>
                 <Route path="/">
                     <ControlsComp />

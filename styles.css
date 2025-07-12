@@ -138,3 +138,84 @@ footer {
     padding-top: 1.5rem;
     font-size: 0.5rem;
 }
+
+/* Board List Component Styles */
+.board-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.board-list-header h2 {
+    color: lightgray;
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+}
+
+.board-list-error {
+    color: red;
+    padding: 1rem;
+    border: 1px solid red;
+    border-radius: 4px;
+    background-color: rgba(255, 0, 0, 0.1);
+    text-align: center;
+}
+
+.board-list-empty {
+    color: gray;
+    padding: 2rem;
+    text-align: center;
+    font-style: italic;
+}
+
+.board-item {
+    border: 1px solid lightgray;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    transition: background-color 0.2s ease;
+}
+
+.board-item:hover {
+    background-color: #2a2a2a;
+    cursor: pointer;
+}
+
+.board-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.board-id {
+    font-weight: bold;
+    color: lightgray;
+    font-size: 1.1rem;
+}
+
+.board-strain {
+    font-size: 1.2rem;
+    color: lightblue;
+    font-weight: bold;
+}
+
+.board-pbn {
+    font-family: "Ubuntu Mono", monospace;
+    font-size: 0.8rem;
+    color: lightgray;
+    word-break: break-all;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background-color: #0a0a0a;
+    border-radius: 2px;
+}
+
+.board-meta {
+    font-size: 0.9rem;
+    color: gray;
+    margin-top: 0.5rem;
+}
