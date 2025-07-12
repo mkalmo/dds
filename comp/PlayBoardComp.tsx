@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Player, Strain } from "../modules/constants.ts";
 import PlayHandComp from "./PlayHandComp.tsx";
 import Card from "../modules/Card.ts";
@@ -19,8 +19,8 @@ type State = {
     sCards: Card[],
     currentTrickLead: Player,
     plays: Play[]
-    wrongCardPlayed: boolean
     showLastTrick: boolean
+    wrongCard: Card | undefined;
 }
 
 export default class PlayBoardComp extends Component<Props, State> {
@@ -30,8 +30,8 @@ export default class PlayBoardComp extends Component<Props, State> {
         sCards: [],
         currentTrickLead: undefined,
         plays: [],
-        wrongCardPlayed: false,
-        showLastTrick: false
+        showLastTrick: false,
+        wrongCard: undefined
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -42,14 +42,9 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                console.log('undo');
+                board.undo();
 
-                this.setState({wrongCardPlayed: false},
-                    () => this.refreshBoard());
-
-                board.undoTrick();
-
-                this.makeOpponentMoveIfNeeded();
+                this.makeOpponentMoveIfNeeded(); // first play only
 
                 this.refreshBoard();
             }
@@ -67,19 +62,21 @@ export default class PlayBoardComp extends Component<Props, State> {
     playCard(card: Card): void {
         const board = this.props.board;
 
-        const wrongCardPlayed = getCorrectPlays(board)
-            .find(c => c.equals(card)) === undefined;
+        if (getCorrectPlays(board).find(each => each.equals(card)) === undefined
+            && !card.equals(this.state.wrongCard)) { // accept on second click
+
+            this.setState({wrongCard: card});
+
+            return;
+        }
+
+        this.setState({wrongCard: undefined});
 
         board.play(board.player, card);
 
-        if (wrongCardPlayed) {
-            this.setState({wrongCardPlayed}, () => this.refreshBoard());
+        this.makeOpponentMoveIfNeeded();
 
-        } else {
-            this.makeOpponentMoveIfNeeded();
-
-            this.refreshBoard();
-        }
+        this.refreshBoard();
     }
 
     makeOpponentMoveIfNeeded(): void {
@@ -92,14 +89,10 @@ export default class PlayBoardComp extends Component<Props, State> {
         const opponent: Player = board.player;
         const opponentCard = getCorrectPlays(board)[0];
 
-        console.log('opponent: ', opponentCard);
-
         board.play(opponent, opponentCard);
     }
 
     updateBoard(board: Board): void {
-        this.setState({ wrongCardPlayed: false });
-
         if (!board.isOpponentsTurn()) {
             this.refreshBoard();
             return;
@@ -133,18 +126,6 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.setState({ nCards, sCards, currentTrickLead, plays });
     }
 
-    iPlayedTricksLastCard() {
-        const board = this.props.board;
-
-        if (board.getLastTrick() === undefined) {
-            return false;
-        }
-
-        const lastPlayer = board.getLastTrick().getPlays()[3].player;
-
-        return lastPlayer === Player.North || lastPlayer === Player.South;
-    }
-
     render() {
 
         const board = this.props.board;
@@ -153,11 +134,6 @@ export default class PlayBoardComp extends Component<Props, State> {
             {c.rank}
             <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
-
-        const currentTrickClickAction = () =>
-                this.setState( { showLastTrick: false }, () => this.updateBoard(board));
-
-        const errorCssClass = this.state.wrongCardPlayed ? 'error' : '';
 
         return (
             <>
@@ -172,10 +148,11 @@ export default class PlayBoardComp extends Component<Props, State> {
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
                                       isValidPlayFunc={c => board.isValidPlay(c)}
+                                      isBadPlayFunc={c => c.equals(this.state.wrongCard)}
                                       cards={this.state.nCards}/>
                     </div>
                     <div>
-                        <div onClick={currentTrickClickAction}>
+                        <div>
                             {this.state.plays.map(play => <div>
                                 <span className='player'>{play.player}&nbsp;</span>
                                 {formatCard(play.card)} </div>)}
@@ -184,6 +161,7 @@ export default class PlayBoardComp extends Component<Props, State> {
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
                                       isValidPlayFunc={c => board.isValidPlay(c)}
+                                      isBadPlayFunc={c => c.equals(this.state.wrongCard)}
                                       cards={this.state.sCards}/>
                     </div>
                 </div>

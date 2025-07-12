@@ -11,12 +11,19 @@ export default class Deal {
         }
     }
 
+    private sortCards(player: Player): void {
+        const sorted = this.sort(this.playersToCards.get(player));
+        this.playersToCards.set(player, sorted) ;
+    }
+
     addCard(player: Player, card: Card): void {
         this.playersToCards.get(player).push(card);
+        this.sortCards(player);
     }
 
     addCards(player: Player, cards: Card[]): void {
-        this.sort(cards).forEach(c => this.playersToCards.get(player).push(c));
+        cards.forEach(c => this.playersToCards.get(player).push(c));
+        this.sortCards(player);
     }
 
     removeCard(player: Player, card: Card): void {

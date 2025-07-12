@@ -8,10 +8,6 @@ body {
     color: gray;
 }
 
-.active {
-    color: lightgrey;
-}
-
 .frames {
     display: grid;
     grid-template-rows: auto 2.5rem;
@@ -79,8 +75,16 @@ body {
     font-size: 2rem;
 }
 
-.play-table .red {
+.play-table .red-suit {
     color: rosybrown;
+}
+
+.play-table .active-card {
+    color: lightgrey;
+}
+
+.play-table .bad-card {
+    color: red;
 }
 
 .play-table-header {

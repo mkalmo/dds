@@ -124,7 +124,7 @@ export default class Board {
         this.player = lastPlay.player;
     }
 
-    undoTrick(): void {
+    undo(): void {
         this.undoPlay(); // opponent
         this.undoPlay(); // us
     }
