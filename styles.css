@@ -83,8 +83,15 @@ body {
     color: rosybrown;
 }
 
-.trickCount {
-    text-align: right;
+.play-table-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Arial", sans-serif;
+}
+
+.play-table-header a {
+    text-decoration: none;
+    color: gray;
 }
 
 .tricks {

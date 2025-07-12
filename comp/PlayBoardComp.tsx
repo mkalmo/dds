@@ -6,6 +6,7 @@ import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import { formatStrain } from "../modules/common.ts";
 import { Play } from "../modules/types.ts";
+import { Link } from "react-router-dom";
 
 declare var Module: DDSModule;
 
@@ -160,29 +161,32 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         return (
             <>
-            <div className='trickCount'>
-                {formatStrain(board.strain)} &nbsp;
-                {board.getNsTrickCount()} / {board.getEwTrickCount()}
-            </div>
-            <div className="play-table">
-                <div>
-                    <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                  isValidPlayFunc={c => board.isValidPlay(c)}
-                                  cards={this.state.nCards}/>
-                </div>
-                <div>
-                    <div onClick={currentTrickClickAction}>
-                        { this.state.plays.map(play => <div>
-                            <span className='player'>{ play.player }&nbsp;</span>
-                            {formatCard(play.card)} </div>) }
+                <div className='play-table-header'>
+                    <Link to={'/'}>Back</Link>
+                    <div>
+                        {formatStrain(board.strain)} &nbsp;
+                        {board.getNsTrickCount()} / {board.getEwTrickCount()}
                     </div>
                 </div>
-                <div>
-                    <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                  isValidPlayFunc={c => board.isValidPlay(c)}
-                                  cards={this.state.sCards}/>
+                <div className="play-table">
+                    <div>
+                        <PlayHandComp cardClickAction={c => this.playCard(c)}
+                                      isValidPlayFunc={c => board.isValidPlay(c)}
+                                      cards={this.state.nCards}/>
+                    </div>
+                    <div>
+                        <div onClick={currentTrickClickAction}>
+                            {this.state.plays.map(play => <div>
+                                <span className='player'>{play.player}&nbsp;</span>
+                                {formatCard(play.card)} </div>)}
+                        </div>
+                    </div>
+                    <div>
+                        <PlayHandComp cardClickAction={c => this.playCard(c)}
+                                      isValidPlayFunc={c => board.isValidPlay(c)}
+                                      cards={this.state.sCards}/>
+                    </div>
                 </div>
-            </div>
             </>);
     }
 }
