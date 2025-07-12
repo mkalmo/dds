@@ -29,17 +29,15 @@ export async function callApi(
         // For GET requests, don't send the options to avoid CORS preflight
         const response = await fetch(url, method === 'GET' ? undefined : options);
 
-        if (!response.ok) {
-            onErrorCb(`API call failed: ${response.status} ${response.statusText}`);
-            return {
-                success: false,
-                error: `API call failed with status ${response.status}`
-            };
+        if (response.ok) {
+            return { success: true, data: await response.json() };
         }
 
+        onErrorCb(`API call failed: ${response.status} ${response.statusText}`);
+
         return {
-            success: true,
-            data: await response.json(),
+            success: false,
+            error: `API call failed with status ${response.status}`
         };
 
     } catch (error: any) {
