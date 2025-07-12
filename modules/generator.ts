@@ -116,7 +116,7 @@ export function createBoard(pbn: string, wasm: Wasm): Board {
 
 export function generateBoard(wasm: Wasm): Board {
     const deal = generateDeal(5, 19);
-    const pbn = deal.toPBN(deal.opener);
+    const pbn = deal.getPbn(deal.opener);
 
     // const pbn = 'W:AJT83.63.J873.86 2.J98.KT62.QJ943 74.542.AQ95.KT75 KQ965.AKQT7.4.A2';
     // const deal = Dea
@@ -137,7 +137,6 @@ export function generateBoard(wasm: Wasm): Board {
 export function generateExercise(wasm: Wasm): Exercise {
 
     const originalBoard = generateBoard(wasm);
-
 
     const board = new Board(originalBoard.getTrickStartPbn(), originalBoard.strain);
     let first = true;

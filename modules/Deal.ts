@@ -53,11 +53,7 @@ export default class Deal {
         return copy;
     }
 
-    getPbn(player: Player): string {
-        return this.toPBN(player);
-    }
-
-    toPBN(player: Player) {
+    getPbn(player: Player) {
 
         const holdings: string[] = [];
 

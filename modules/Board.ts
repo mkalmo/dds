@@ -5,11 +5,10 @@ import Trick from "./Trick.ts";
 import { Play } from "./types.ts";
 
 export default class Board {
-    public deal: Deal;
+    public readonly deal: Deal;
     public player: Player;
     public plays: Play[];
-    public tricks: Trick[];
-    public trickStartPbns: string[];
+    public readonly tricks: Trick[];
 
     constructor(initialPbn: string,
                 public readonly strain: Strain) {
@@ -18,7 +17,6 @@ export default class Board {
         this.player = Player.fromString(initialPbn[0]);  // first to play comes directly from PBN.
         this.plays = [];  // plays in this trick
         this.tricks = [];  // previous tricks. Array of CompleteTrick.
-        this.trickStartPbns = [initialPbn];
     }
 
     isCompleted() {
@@ -42,7 +40,6 @@ export default class Board {
         const winner = trick.winner();
 
         this.tricks.push(trick);
-        this.trickStartPbns.push(this.deal.toPBN(winner));
         this.player = winner;
         this.plays = [];
     }
@@ -59,8 +56,16 @@ export default class Board {
                 || t.winner() === Player.West).length
     }
 
-    getTrickStartPbn(): string {
-        return this.trickStartPbns[this.trickStartPbns.length - 1];
+    getTrickStartPbn(): string { // solver expects that
+        const deal = Deal.fromPBN(this.deal.getPbn(this.player));
+
+        for (const play of this.plays) {
+            deal.addCard(play.player, play.card);
+        }
+
+        const nextPlayer = this.getLastTrick()?.winner() || this.deal.opener;
+
+        return deal.getPbn(nextPlayer);
     }
 
     isValidPlay(card: Card): boolean {
@@ -95,17 +100,32 @@ export default class Board {
         return this.tricks[this.tricks.length - 1];
     }
 
-    undoTrick(): void {
-        if (this.tricks.length > 0) {
-            console.log('pop');
-            this.trickStartPbns.pop();
-            this.tricks.pop();
+    getLastPlay(): Play {
+        return this.plays[this.plays.length - 1];
+    }
+
+    toPBN(): string {
+        return this.deal.getPbn(this.player);
+    }
+
+    undoPlay(): void {
+        if (!this.getLastPlay() && !this.getLastTrick()) {
+            return;
         }
 
-        const pbn = this.getTrickStartPbn();
+        if (!this.getLastPlay()) {
+            this.plays = this.tricks.pop().getPlays();
+        }
 
-        this.deal = Deal.fromPBN(pbn);
-        this.player = Player.fromString(pbn[0]);
-        this.plays = [];
+        const lastPlay = this.plays.pop();
+
+        this.deal.addCard(lastPlay.player, lastPlay.card);
+
+        this.player = lastPlay.player;
+    }
+
+    undoTrick(): void {
+        this.undoPlay(); // opponent
+        this.undoPlay(); // us
     }
 }
