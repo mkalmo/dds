@@ -1,7 +1,6 @@
 <?php
 
 const DATA_FILE = 'data.json';
-const ID_FILE = 'id.txt';
 
 header('Content-Type: application/json');
 
@@ -16,13 +15,15 @@ if ($cmd === 'save-board') {
         exit;
     }
 
-    $postData['id'] = nextId();
+    $json = loadData();
 
-    $data = loadData();
+    $nextId = $json['nextId'];
+    $json['nextId'] = intval($nextId) + 1;
 
-    $data['boards'][] = $postData;
+    $postData['id'] = $nextId;
+    $json['boards'][] = $postData;
 
-    if (saveData($data)) {
+    if (saveData($json)) {
         echo json_encode($postData);
     } else {
         http_response_code(500);
@@ -41,32 +42,13 @@ if ($cmd === 'save-board') {
 
 function loadData(): array {
     if (!file_exists(DATA_FILE)) {
-        throw new RuntimeException('File not found');
+        return ['boards' => [], 'nextId' => 1];
     }
 
-    $data = ['boards' => []];
-    $existingData = json_decode(file_get_contents(DATA_FILE), true);
-
-    if ($existingData && isset($existingData['boards'])) {
-        $data = $existingData;
-    }
-
-    return $data;
+    return json_decode(file_get_contents(DATA_FILE), true);
 }
 
 function saveData($data): bool {
     return file_put_contents(DATA_FILE,
             json_encode($data, JSON_PRETTY_PRINT)) !== false;
-}
-
-function nextId(): int {
-    if (!file_exists(ID_FILE)) {
-        throw new RuntimeException('id file not found');
-    }
-
-    $nextId = intval(file_get_contents(ID_FILE)) + 1;
-
-    file_put_contents(ID_FILE, $nextId);
-
-    return $nextId;
 }
