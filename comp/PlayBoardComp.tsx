@@ -42,6 +42,8 @@ export default class PlayBoardComp extends Component<Props, State> {
 
                 board.undo();
 
+                this.setState({ wrongCard: undefined });
+
                 this.makeOpponentMoveIfNeeded(); // first play only
 
                 this.redrawBoard();

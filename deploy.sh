@@ -7,6 +7,7 @@ path='/var/www/html/dds'
 cp index-dist.html ${path}/index.html
 cp styles.css ${path}
 cp out.js ${path}
+cp api.php ${path}
 
 mkdir -p ${path}/dist
 
