@@ -44,13 +44,15 @@ export default class PlayBoardComp extends Component<Props, State> {
 
                 this.makeOpponentMoveIfNeeded(); // first play only
 
-                this.refreshBoard();
+                this.redrawBoard();
             }
         };
 
         window.addEventListener('keyup', this.undoKeyHandler);
 
-        this.updateBoard(board);
+        this.makeOpponentMoveIfNeeded();
+
+        this.redrawBoard();
     }
 
     componentWillUnmount() {
@@ -74,7 +76,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         this.makeOpponentMoveIfNeeded();
 
-        this.refreshBoard();
+        this.redrawBoard();
     }
 
     makeOpponentMoveIfNeeded(): void {
@@ -87,28 +89,14 @@ export default class PlayBoardComp extends Component<Props, State> {
         const opponent: Player = board.player;
         const opponentCard = getCorrectPlays(board)[0];
 
+        // if (opponentCard.equals(Card.parse('6H'))) {
+        //     opponentCard = Card.parse('2S');
+        // }
+
         board.play(opponent, opponentCard);
     }
 
-    updateBoard(board: Board): void {
-        if (!board.isOpponentsTurn()) {
-            this.refreshBoard();
-            return;
-        }
-
-        const opponent: Player = board.player;
-        let opponentCard = getCorrectPlays(board)[0];
-
-        if (opponentCard.equals(Card.parse('6H'))) {
-            opponentCard = Card.parse('2S');
-        }
-
-        board.play(opponent, opponentCard);
-
-        this.refreshBoard();
-    }
-
-    refreshBoard() {
+    redrawBoard() {
         const board = this.props.board;
 
         const nCards = board.deal.getPlayerCards(Player.North);
@@ -135,7 +123,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const onTrickClickFunc = () => {
             this.makeOpponentMoveIfNeeded();
-            this.refreshBoard();
+            this.redrawBoard();
         };
 
         return (
