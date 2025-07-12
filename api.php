@@ -7,7 +7,9 @@ header('Content-Type: application/json');
 $cmd = $_GET['cmd'] ?? '';
 
 if ($cmd === 'save-board') {
-    $postData = json_decode(file_get_contents('php://input'), true);
+    $raw = file_get_contents('php://input');
+
+    $postData = json_decode($raw, true);
 
     if (!$postData) {
         http_response_code(400);
@@ -21,6 +23,7 @@ if ($cmd === 'save-board') {
     $json['nextId'] = intval($nextId) + 1;
 
     $postData['id'] = $nextId;
+    $postData['createdAt'] = date("c");
     $json['boards'][] = $postData;
 
     if (saveData($json)) {
@@ -51,4 +54,11 @@ function loadData(): array {
 function saveData($data): bool {
     return file_put_contents(DATA_FILE,
             json_encode($data, JSON_PRETTY_PRINT)) !== false;
+}
+
+function varDumpToString($variable) {
+    ob_start();                 // Start output buffering
+    var_dump($variable);       // Dump the variable
+    $output = ob_get_clean();  // Get buffer contents and clean buffer
+    return $output;            // Return the captured output as a string
 }
