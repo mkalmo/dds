@@ -5,6 +5,7 @@ import Card from "../modules/Card.ts";
 import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import { formatStrain } from "../modules/common.ts";
+import { Play } from "../modules/types.ts";
 
 declare var Module: DDSModule;
 
@@ -16,7 +17,7 @@ type State = {
     nCards: Card[]
     sCards: Card[],
     currentTrickLead: Player,
-    playedCards: Card[]
+    plays: Play[]
     wrongCardPlayed: boolean
     showLastTrick: boolean
 }
@@ -27,7 +28,7 @@ export default class PlayBoardComp extends Component<Props, State> {
         nCards: [],
         sCards: [],
         currentTrickLead: undefined,
-        playedCards: [],
+        plays: [],
         wrongCardPlayed: false,
         showLastTrick: false
     }
@@ -119,16 +120,16 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         let currentTrickLead = board.plays.length
             ? board.plays[0].player : undefined
-        let playedCards = board.plays.map(p => p.card);
+        let plays = board.plays;
 
         if (board.plays.length === 0 && board.getLastTrick() !== undefined) {
             // Show last trick, otherwise can't see opponents last play
             currentTrickLead =
                 board.getLastTrick().getLeadPlayer();
-            playedCards = board.getLastTrick().cards();
+            plays = board.getLastTrick().getPlays();
         }
 
-        this.setState({ nCards, sCards, currentTrickLead, playedCards });
+        this.setState({ nCards, sCards, currentTrickLead, plays });
     }
 
     iPlayedTricksLastCard() {
@@ -149,7 +150,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const formatCard = (c: Card) => <React.Fragment key={c.toString()}>
             {c.rank}
-            <span>{ formatStrain(c.suit as Strain) } </span>
+            <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
 
         const currentTrickClickAction = () =>
@@ -170,10 +171,10 @@ export default class PlayBoardComp extends Component<Props, State> {
                                   cards={this.state.nCards}/>
                 </div>
                 <div>
-                    <div className={'hand ' + errorCssClass} onClick={currentTrickClickAction}>
-                        <span className='small'>{ this.state.currentTrickLead }</span>
-                        &nbsp;
-                        { this.state.playedCards.map(card => formatCard(card)) }
+                    <div onClick={currentTrickClickAction}>
+                        { this.state.plays.map(play => <div>
+                            <span className='player'>{ play.player }&nbsp;</span>
+                            {formatCard(play.card)} </div>) }
                     </div>
                 </div>
                 <div>

@@ -12,10 +12,6 @@ body {
     color: lightgrey;
 }
 
-.hand .red {
-    color: rosybrown;
-}
-
 .frames {
     display: grid;
     grid-template-rows: auto 2.5rem;
@@ -35,16 +31,6 @@ body {
 
 .controls > div {
     width: 40rem;
-}
-
-.play-table {
-    display: grid;
-    grid-template-rows: 17rem 8rem 17rem;
-    /*border: 1px solid black;*/
-}
-
-.play-table > div {
-    justify-self: center;
 }
 
 .grid-table {
@@ -72,22 +58,29 @@ body {
     padding: 1px;
 }
 
-.hand {
-    font-family: "Ubuntu Mono";
-    border: none;
-    font-size: 2rem;
-}
-
-.play-table .hand {
+.play-table {
+    display: grid;
+    grid-template-rows: 17rem 8rem 17rem;
+    font-family: "Ubuntu Mono", monospace;
     font-size: 3rem;
 }
 
-.play-table .small {
+.play-table div {
+    justify-self: center;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+.play-table .player {
     font-size: 1rem;
 }
 
-.play-table .hand.error {
-    color: red;
+.play-table .suit {
+    font-size: 2rem;
+}
+
+.play-table .red {
+    color: rosybrown;
 }
 
 .trickCount {
