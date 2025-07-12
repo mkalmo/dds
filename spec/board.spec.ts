@@ -23,7 +23,7 @@ test('Checks if play is valid', () => {
 
 test('Generates valid trick start Pbn (for solver)', () => {
 
-    const pbn = 'W:2...J 3...Q 4...K 5...A';
+    const pbn = 'W:2.6..J 3.7..Q 4.9..K 5.8..A';
 
     const board = new Board(pbn, Suit.Spades);
 

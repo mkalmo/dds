@@ -17,7 +17,6 @@ type Props = {
 type State = {
     nCards: Card[]
     sCards: Card[],
-    currentTrickLead: Player,
     plays: Play[]
     showLastTrick: boolean
     wrongCard: Card | undefined;
@@ -28,7 +27,6 @@ export default class PlayBoardComp extends Component<Props, State> {
     state: State = {
         nCards: [],
         sCards: [],
-        currentTrickLead: undefined,
         plays: [],
         showLastTrick: false,
         wrongCard: undefined
@@ -99,7 +97,11 @@ export default class PlayBoardComp extends Component<Props, State> {
         }
 
         const opponent: Player = board.player;
-        const opponentCard = getCorrectPlays(board)[0];
+        let opponentCard = getCorrectPlays(board)[0];
+
+        if (opponentCard.equals(Card.parse('6H'))) {
+            opponentCard = Card.parse('2S');
+        }
 
         board.play(opponent, opponentCard);
 
@@ -112,18 +114,14 @@ export default class PlayBoardComp extends Component<Props, State> {
         const nCards = board.deal.getPlayerCards(Player.North);
         const sCards = board.deal.getPlayerCards(Player.South);
 
-        let currentTrickLead = board.plays.length
-            ? board.plays[0].player : undefined
         let plays = board.plays;
 
         if (board.plays.length === 0 && board.getLastTrick() !== undefined) {
             // Show last trick, otherwise can't see opponents last play
-            currentTrickLead =
-                board.getLastTrick().getLeadPlayer();
             plays = board.getLastTrick().getPlays();
         }
 
-        this.setState({ nCards, sCards, currentTrickLead, plays });
+        this.setState({ nCards, sCards, plays });
     }
 
     render() {
@@ -134,6 +132,11 @@ export default class PlayBoardComp extends Component<Props, State> {
             {c.rank}
             <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
         </React.Fragment>;
+
+        const onTrickClickFunc = () => {
+            this.makeOpponentMoveIfNeeded();
+            this.refreshBoard();
+        };
 
         return (
             <>
@@ -152,7 +155,7 @@ export default class PlayBoardComp extends Component<Props, State> {
                                       cards={this.state.nCards}/>
                     </div>
                     <div>
-                        <div>
+                        <div onClick={ onTrickClickFunc }>
                             {this.state.plays.map(play => <div>
                                 <span className='player'>{play.player}&nbsp;</span>
                                 {formatCard(play.card)} </div>)}
