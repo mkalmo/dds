@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import Dao, { BoardData } from "../modules/Dao.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
+import Deal from "../modules/Deal.ts";
+import { Player } from "../modules/constants.ts";
 
 declare var Module: DDSModule;
 
@@ -28,9 +30,16 @@ const ControlsComp = () => {
             // Calculate strain for the board
             const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain();
 
+            // Calculate HCP for South and North players
+            const deal = Deal.fromPBN(pbn);
+            const southHcp = deal.getHcp(Player.South);
+            const northHcp = deal.getHcp(Player.North);
+            const hcp = `${southHcp}/${northHcp}`;
+
             const boardData: BoardData = {
                 pbn,
-                strain
+                strain,
+                hcp
             };
 
             const result = await dao.saveBoard(boardData);

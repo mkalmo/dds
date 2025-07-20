@@ -4,6 +4,7 @@ export interface BoardData {
     id?: number;
     pbn: string;
     strain: string;
+    hcp: string;
 }
 
 export default class Dao {
