@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
-import { generateExercise } from "../modules/generator.ts";
+import {createExercise, createBoard, generateBoard} from "../modules/generator.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import PrintBoardComp from "./PrintBoardComp.tsx";
 
@@ -10,11 +10,11 @@ const PrintBoardListComp = () => {
 
     const params: any = useParams();
 
-    console.log('count: ', params.count);
+    const wasm = new Wasm(Module);
 
     const exercises = Array.from({ length: params.count }).map((_, i) => {
             console.log('ex:', i);
-            return generateExercise(new Wasm(Module));
+            return createExercise(generateBoard(wasm), wasm);
         });
 
     return (

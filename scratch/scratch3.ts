@@ -1,9 +1,11 @@
-import { generateExercise } from "../modules/generator.ts";
+import {generateBoard, createExercise} from "../modules/generator.ts";
 // @ts-ignore
 import * as wasmModule from '../out.js';
 
 import Wasm from "../modules/Wasm.ts";
 
-const ex = generateExercise(new Wasm(wasmModule));
+const wasm = new Wasm(wasmModule);
 
-// console.log(ex);
+const ex = createExercise(generateBoard(wasm), wasm);
+
+console.log(ex);

@@ -131,17 +131,15 @@ export function generateBoard(wasm: Wasm): Board {
     return new Board(pbn, strain);
 }
 
-export function generateExercise(wasm: Wasm): Exercise {
+export function createExercise(board: Board, wasm: Wasm): Exercise {
 
-    const originalBoard = generateBoard(wasm);
-
-    const board = new Board(originalBoard.getTrickStartPbn(), originalBoard.strain);
+    const tmpBoard = new Board(board.getTrickStartPbn(), board.strain);
     let first = true;
-    while (!board.isCompleted()) {
+    while (!tmpBoard.isCompleted()) {
         const playsResult = wasm.nextPlays(
-            board.getTrickStartPbn(), board.strain, board.plays.map(p => p.card));
+            tmpBoard.getTrickStartPbn(), tmpBoard.strain, tmpBoard.plays.map(p => p.card));
 
-        const calc = new NextPlayCalculator(playsResult, board.deal, board.strain);
+        const calc = new NextPlayCalculator(playsResult, tmpBoard.deal, tmpBoard.strain);
 
         let card = calc.getNextPlay();
 
@@ -151,9 +149,9 @@ export function generateExercise(wasm: Wasm): Exercise {
         //     card = new Card('6', 'C');
         // }
 
-        board.play(playsResult.player, card);
+        tmpBoard.play(playsResult.player, card);
     }
 
-    return new Exercise(originalBoard.deal,
-                        originalBoard.strain, board.getNsTrickCount(), board.tricks);
+    return new Exercise(board.deal,
+                        board.strain, tmpBoard.getNsTrickCount(), tmpBoard.tricks);
 }
