@@ -91,7 +91,7 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
                         title={board.pbn}
                     >
                         <div className="board-item-header">
-                            <span className="board-id">Board #{board.id}</span>
+                            <span className="board-id">{board.id}</span>
                             <span className="board-strain">
                                 {formatStrain(board.strain as Strain)}
                             </span>
@@ -100,12 +100,6 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
                         <div className="board-pbn">
                             {this.truncatePbn(board.pbn)}
                         </div>
-                        
-                        {board.createdAt && (
-                            <div className="board-meta">
-                                Created: {this.formatDate(board.createdAt)}
-                            </div>
-                        )}
                     </div>
                 ))}
             </div>
