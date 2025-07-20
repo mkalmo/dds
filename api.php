@@ -19,12 +19,39 @@ if ($cmd === 'save-board') {
 
     $json = loadData();
 
-    $nextId = $json['nextId'];
-    $json['nextId'] = intval($nextId) + 1;
+    // Check if this is an update (ID provided) or a new board
+    if (isset($postData['id']) && $postData['id'] !== null) {
+        // Update existing board
+        $boardId = intval($postData['id']);
+        $boardFound = false;
 
-    $postData['id'] = $nextId;
-    $postData['createdAt'] = date("c");
-    $json['boards'][] = $postData;
+        for ($i = 0; $i < count($json['boards']); $i++) {
+            if ($json['boards'][$i]['id'] === $boardId) {
+                // Update the existing board, preserving createdAt if it exists
+                if (isset($json['boards'][$i]['createdAt'])) {
+                    $postData['createdAt'] = $json['boards'][$i]['createdAt'];
+                }
+                $postData['updatedAt'] = date("c");
+                $json['boards'][$i] = $postData;
+                $boardFound = true;
+                break;
+            }
+        }
+
+        if (!$boardFound) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Board not found']);
+            exit;
+        }
+    } else {
+        // Create new board
+        $nextId = $json['nextId'];
+        $json['nextId'] = intval($nextId) + 1;
+
+        $postData['id'] = $nextId;
+        $postData['createdAt'] = date("c");
+        $json['boards'][] = $postData;
+    }
 
     if (saveData($json)) {
         echo json_encode($postData);

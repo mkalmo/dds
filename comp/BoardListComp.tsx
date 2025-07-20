@@ -40,16 +40,6 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
         }
     }
 
-    private formatDate = (isoString: string): string => {
-        return new Date(isoString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
-
     private formatHcp = (hcp: string): string => {
         return `HCP: ${hcp} (S/N)`;
     };
@@ -58,6 +48,43 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
         if (this.props.onBoardSelect) {
             this.props.onBoardSelect(board);
         }
+    };
+
+    private handleDifficultyChange = async (boardId: number, difficulty: number): Promise<void> => {
+        try {
+            const result = await this.dao.updateBoardDifficulty(boardId, difficulty);
+
+            if (result.success) {
+                // Update the board in the local state
+                this.setState(prevState => ({
+                    boards: prevState.boards.map(board =>
+                        board.id === boardId
+                            ? { ...board, difficulty }
+                            : board
+                    )
+                }));
+            }
+        } catch (error) {
+            // Silently handle errors - user will see no change in UI
+        }
+    };
+
+    private renderDifficultyRating = (board: BoardData): JSX.Element => {
+        return (
+            <div className="difficulty-rating">
+                {[1, 2, 3].map(level => (
+                    <label key={level} className="difficulty-radio">
+                        <input
+                            type="radio"
+                            name={`difficulty-${board.id}`}
+                            value={level}
+                            checked={board.difficulty === level}
+                            onChange={() => this.handleDifficultyChange(board.id!, level)}
+                        />
+                    </label>
+                ))}
+            </div>
+        );
     };
 
     render() {
@@ -105,6 +132,8 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
                         <div className="board-hcp">
                             {this.formatHcp(board.hcp)}
                         </div>
+
+                        {this.renderDifficultyRating(board)}
                     </div>
                 ))}
             </div>

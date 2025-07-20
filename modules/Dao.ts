@@ -5,6 +5,7 @@ export interface BoardData {
     pbn: string;
     strain: string;
     hcp: string;
+    difficulty?: number;
 }
 
 export default class Dao {
@@ -15,5 +16,10 @@ export default class Dao {
 
     async getBoards(): Promise<ApiResponse<BoardData[]>> {
         return callApi('get-boards', 'GET', null);
+    }
+
+    async updateBoardDifficulty(boardId: number, difficulty: number): Promise<ApiResponse<BoardData>> {
+        // Use the existing save-board endpoint with the board ID to update difficulty
+        return callApi('save-board', 'POST', { id: boardId, difficulty });
     }
 }
