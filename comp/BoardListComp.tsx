@@ -88,14 +88,21 @@ class BoardListComp extends Component<RouteComponentProps, State> {
                     <div
                         key={board.id}
                         className="board-item"
-                        onClick={() => this.handleBoardClick(board)}
                         title={board.pbn} >
 
-                        {board.id} &nbsp; &nbsp;
+                        {board.id}
+
+                        &nbsp; &nbsp;
 
                         <span className={'play-link'} onClick={() => this.handleBoardClick(board)}>
                             {this.formatHcp(board.hcp)}
                         </span>
+
+                        &nbsp; &nbsp;
+
+                        {board.strain}
+
+                        &nbsp; &nbsp;
 
                         {this.renderDifficultyRating(board)}
                     </div>
