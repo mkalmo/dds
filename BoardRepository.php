@@ -107,10 +107,28 @@ class BoardRepository {
         }, $data['boards']);
     }
 
+    /**
+     * Check if a board with the given PBN already exists
+     */
+    private function pbnExists(string $pbn): bool {
+        $data = $this->loadData();
+        foreach ($data['boards'] as $boardData) {
+            if (isset($boardData['pbn']) && $boardData['pbn'] === $pbn) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function create(BoardDto $board): BoardDto {
         $errors = $board->validateForCreation();
         if (!empty($errors)) {
             throw new RuntimeException('Missing required fields: ' . implode(', ', $errors));
+        }
+
+        // Check for duplicate PBN
+        if ($this->pbnExists($board->pbn)) {
+            throw new RuntimeException('A board with this PBN already exists');
         }
 
         $data = $this->loadData();
@@ -118,6 +136,8 @@ class BoardRepository {
         $data['nextId'] = $newId + 1;
 
         $board->id = $newId;
+        $board->createdAt = date("c");
+        $board->updatedAt = date("c");
 
         $data['boards'][] = json_decode(json_encode($board), true);
 
