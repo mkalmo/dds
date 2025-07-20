@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Dao, { BoardData } from "../modules/Dao.ts";
 import { formatStrain } from "../modules/common.ts";
 import { Strain } from "../modules/constants.ts";
@@ -49,8 +50,8 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
         });
     };
 
-    private truncatePbn = (pbn: string, maxLength: number = 50): string => {
-        return pbn.length > maxLength ? `${pbn.substring(0, maxLength)}...` : pbn;
+    private formatHcp = (hcp: string): string => {
+        return `HCP: ${hcp} (S/N)`;
     };
 
     private handleBoardClick = (board: BoardData): void => {
@@ -65,12 +66,16 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
 
         return (
             <div className={`board-list ${className || ''}`}>
+                <div className="board-list-navigation">
+                    <Link to="/" className="back-link">← Back</Link>
+                </div>
+
                 {error && (
                     <div className="board-list-error">
                         Error: {error}
                     </div>
                 )}
-                
+
                 {!error && boards.length === 0 && (
                     <div className="board-list-empty">
                         No saved boards found.
@@ -84,8 +89,8 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
                 )}
 
                 {boards.map((board) => (
-                    <div 
-                        key={board.id} 
+                    <div
+                        key={board.id}
                         className="board-item"
                         onClick={() => this.handleBoardClick(board)}
                         title={board.pbn}
@@ -96,9 +101,9 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
                                 {formatStrain(board.strain as Strain)}
                             </span>
                         </div>
-                        
-                        <div className="board-pbn">
-                            {this.truncatePbn(board.pbn)}
+
+                        <div className="board-hcp">
+                            {this.formatHcp(board.hcp)}
                         </div>
                     </div>
                 ))}
