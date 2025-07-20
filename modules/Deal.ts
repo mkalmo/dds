@@ -1,4 +1,4 @@
-import { NEXT_PLAYER, Player, Players, Suits, SUITS } from "./constants.ts";
+import {HCP_MAP, NEXT_PLAYER, Player, Players, Suits, SUITS} from "./constants.ts";
 import Card from "./Card.ts";
 
 export default class Deal {
@@ -124,5 +124,10 @@ export default class Deal {
             player = NEXT_PLAYER.get(player);
         });
         return playerToHand;
+    }
+
+    getHcp(player: Player): number {
+        // use HCP_MAP constant
+        return 0;
     }
 }
