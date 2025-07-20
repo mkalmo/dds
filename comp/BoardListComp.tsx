@@ -5,59 +5,35 @@ import { formatStrain } from "../modules/common.ts";
 import { Strain } from "../modules/constants.ts";
 import { showApiError } from "../modules/error-reporter.ts";
 
-interface BoardListCompProps extends RouteComponentProps {
-    onBoardSelect?: (board: BoardData) => void;
-    className?: string;
-}
-
-interface BoardListCompState {
+interface State {
     boards: BoardData[];
-    error: string | null;
 }
 
-class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
-    private dao: Dao;
+class BoardListComp extends Component<RouteComponentProps, State> {
+    private dao: Dao = new Dao();
 
-    constructor(props: BoardListCompProps) {
+    constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
-            boards: [],
-            error: null
-        };
-        this.dao = new Dao();
+            boards: []
+        }
     }
 
     async componentDidMount() {
-        try {
-            const result = await this.dao.getBoards();
-            if (result.success) {
-                this.setState({
-                    boards: result.data || [],
-                    error: null
-                });
-            } else {
-                const errorMsg = result.error || 'Failed to load boards';
-                this.setState({ error: errorMsg });
-                showApiError(errorMsg, 'Load boards');
-            }
-        } catch (error) {
-            const errorMsg = 'Failed to load boards';
-            this.setState({ error: errorMsg });
-            showApiError(error, 'Load boards');
+        const result = await this.dao.getBoards();
+        if (result.success) {
+            this.setState({ boards: result.data || [] });
+        } else {
+            const errorMsg = result.error || 'Failed to load boards';
+            showApiError(errorMsg, 'Load boards');
         }
     }
 
     private formatHcp = (hcp: string): string => {
-        return `HCP: ${hcp} (S/N)`;
+        return `HCP: ${hcp}`;
     };
 
     private handleBoardClick = (board: BoardData): void => {
-        // Preserve existing functionality
-        if (this.props.onBoardSelect) {
-            this.props.onBoardSelect(board);
-        }
-
-        // Navigate to play route with the board's PBN data
         this.props.history.push({
             pathname: '/play',
             search: `?pbn=${encodeURIComponent(board.pbn)}`
@@ -99,51 +75,27 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
     };
 
     render() {
-        const { boards, error } = this.state;
-        const { className } = this.props;
+        const { boards } = this.state;
 
         return (
-            <div className={`board-list ${className || ''}`}>
+            <div className={'board-list'}>
                 <div className="board-list-navigation">
                     <Link to="/" className="back-link">← Back</Link>&nbsp;
                     <Link to="/show-print" className="back-link">Print</Link>
                 </div>
-
-                {error && (
-                    <div className="board-list-error">
-                        Error: {error}
-                    </div>
-                )}
-
-                {!error && boards.length === 0 && (
-                    <div className="board-list-empty">
-                        No saved boards found.
-                    </div>
-                )}
-
-                {!error && boards.length > 0 && (
-                    <div className="board-list-header">
-                        <h2>Saved Boards ({boards.length})</h2>
-                    </div>
-                )}
 
                 {boards.map((board) => (
                     <div
                         key={board.id}
                         className="board-item"
                         onClick={() => this.handleBoardClick(board)}
-                        title={board.pbn}
-                    >
-                        <div className="board-item-header">
-                            <span className="board-id">{board.id}</span>
-                            <span className="board-strain">
-                                {formatStrain(board.strain as Strain)}
-                            </span>
-                        </div>
+                        title={board.pbn} >
 
-                        <div className="board-hcp">
+                        {board.id} &nbsp; &nbsp;
+
+                        <span className={'play-link'} onClick={() => this.handleBoardClick(board)}>
                             {this.formatHcp(board.hcp)}
-                        </div>
+                        </span>
 
                         {this.renderDifficultyRating(board)}
                     </div>
