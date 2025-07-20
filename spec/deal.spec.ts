@@ -9,8 +9,8 @@ test('Calculates HPC for player', () => {
     const deal = Deal.fromPBN(pbn);
 
     expect(deal.getHcp(Player.West)).toBe(6);
-    expect(deal.getHcp(Player.South)).toBe(7);
+    expect(deal.getHcp(Player.North)).toBe(7);
     expect(deal.getHcp(Player.East)).toBe(9);
-    expect(deal.getHcp(Player.North)).toBe(18);
+    expect(deal.getHcp(Player.South)).toBe(18);
 });
 

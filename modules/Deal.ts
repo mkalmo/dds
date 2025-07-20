@@ -127,7 +127,15 @@ export default class Deal {
     }
 
     getHcp(player: Player): number {
-        // use HCP_MAP constant
-        return 0;
+        const playerCards = this.playersToCards.get(player);
+
+        let hcp = 0;
+        for (const card of playerCards) {
+            if (HCP_MAP[card.rank]) {
+                hcp += HCP_MAP[card.rank];
+            }
+        }
+
+        return hcp;
     }
 }
