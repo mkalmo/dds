@@ -30,8 +30,7 @@ const ControlsComp = () => {
 
             const boardData: BoardData = {
                 pbn,
-                strain,
-                createdAt: new Date().toISOString()
+                strain
             };
 
             const result = await dao.saveBoard(boardData);
