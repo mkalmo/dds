@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Dao, { BoardData } from "../modules/Dao.ts";
 import { formatStrain } from "../modules/common.ts";
 import { Strain } from "../modules/constants.ts";
 import { showApiError } from "../modules/error-reporter.ts";
 
-interface BoardListCompProps {
+interface BoardListCompProps extends RouteComponentProps {
     onBoardSelect?: (board: BoardData) => void;
     className?: string;
 }
@@ -52,9 +52,16 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
     };
 
     private handleBoardClick = (board: BoardData): void => {
+        // Preserve existing functionality
         if (this.props.onBoardSelect) {
             this.props.onBoardSelect(board);
         }
+
+        // Navigate to play route with the board's PBN data
+        this.props.history.push({
+            pathname: '/play',
+            search: `?pbn=${encodeURIComponent(board.pbn)}`
+        });
     };
 
     private handleDifficultyChange = async (boardId: number, difficulty: number): Promise<void> => {
@@ -145,4 +152,4 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
     }
 }
 
-export default BoardListComp;
+export default withRouter(BoardListComp);
