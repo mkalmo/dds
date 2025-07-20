@@ -25,7 +25,7 @@ const TrickComp = (props: Props) => {
     }
 
     return (
-        <div>
+        <div className='tricks'>
             <span className='lead'>{ props.trick.getLeadPlayer() }&nbsp;</span>
             { props.trick.cards().map(c => formatCard(c)) }
         </div>);

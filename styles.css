@@ -29,24 +29,27 @@ body {
     width: 40rem;
 }
 
-.grid-table {
+.print-table {
     display: grid;
     grid-template-columns: 15rem 15rem 15rem;
     grid-template-rows: 12rem 12rem 12rem;
+    font-family: "Ubuntu Mono", monospace;
+    font-size: 2rem;
 }
 
 .northCell {
     position: relative;
 }
 
-.info {
+.print-table .info {
     position: absolute;
     top: 0;
     left: 0;
     padding: 0.3rem;
+    font-size: 1rem;
 }
 
-.grid-table > div {
+.print-table > div {
     border: 1px solid lightgray;
     display: flex;
     justify-content: center;
@@ -100,13 +103,12 @@ body {
 
 .tricks {
     font-family: "Ubuntu Mono", monospace;
-    font-size: 1.4rem;
     white-space: pre;
 }
 
 .tricks .card {
     display: inline-block;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 0.5rem;
 }
 
@@ -139,7 +141,6 @@ footer {
     font-size: 0.5rem;
 }
 
-/* Board List Component Styles */
 .board-list {
     display: flex;
     flex-direction: column;

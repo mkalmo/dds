@@ -23,7 +23,7 @@ const PrintBoardComp = (props: Props) => {
 
     return (
         <div className="frames">
-            <div className="grid-table">
+            <div className="print-table">
                 <div></div>
                 <div className='northCell'>
                     <span className='info'>
