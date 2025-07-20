@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Dao, { BoardData } from "../modules/Dao.ts";
 import { formatStrain } from "../modules/common.ts";
 import { Strain } from "../modules/constants.ts";
+import { showApiError } from "../modules/error-reporter.ts";
 
 interface BoardListCompProps {
     onBoardSelect?: (board: BoardData) => void;
@@ -27,16 +28,22 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
     }
 
     async componentDidMount() {
-        const result = await this.dao.getBoards();
-        if (result.success) {
-            this.setState({ 
-                boards: result.data || [], 
-                error: null 
-            });
-        } else {
-            this.setState({ 
-                error: result.error || 'Failed to load boards' 
-            });
+        try {
+            const result = await this.dao.getBoards();
+            if (result.success) {
+                this.setState({
+                    boards: result.data || [],
+                    error: null
+                });
+            } else {
+                const errorMsg = result.error || 'Failed to load boards';
+                this.setState({ error: errorMsg });
+                showApiError(errorMsg, 'Load boards');
+            }
+        } catch (error) {
+            const errorMsg = 'Failed to load boards';
+            this.setState({ error: errorMsg });
+            showApiError(error, 'Load boards');
         }
     }
 
@@ -51,21 +58,18 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
     };
 
     private handleDifficultyChange = async (boardId: number, difficulty: number): Promise<void> => {
-        try {
-            const result = await this.dao.updateBoardDifficulty(boardId, difficulty);
+        const result = await this.dao.updateBoardDifficulty(boardId, difficulty);
 
-            if (result.success) {
-                // Update the board in the local state
-                this.setState(prevState => ({
-                    boards: prevState.boards.map(board =>
-                        board.id === boardId
-                            ? { ...board, difficulty }
-                            : board
-                    )
-                }));
-            }
-        } catch (error) {
-            // Silently handle errors - user will see no change in UI
+        if (result.success) {
+            this.setState(prevState => ({
+                boards: prevState.boards.map(board =>
+                    board.id === boardId
+                        ? { ...board, difficulty }
+                        : board
+                )
+            }));
+        } else {
+            showApiError(result.error || 'Failed to update difficulty', 'Update difficulty');
         }
     };
 

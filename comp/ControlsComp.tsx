@@ -4,6 +4,7 @@ import Dao, { BoardData } from "../modules/Dao.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
 import Deal from "../modules/Deal.ts";
 import { Player } from "../modules/constants.ts";
+import { showApiError } from "../modules/error-reporter.ts";
 
 declare var Module: DDSModule;
 
@@ -14,7 +15,7 @@ const ControlsComp = () => {
 
     const [pbn, setPbn] = useState('W:AT97.Q5.Q2.AKT72 KJ86.JT6.AJ987.J 5432.9873.T43.95 Q.AK42.K65.Q8643');
     const [count, setCount] = useState(1);
-    const [saveStatus, setSaveStatus] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
 
     const playFunc = () => {
         history.push({
@@ -24,36 +25,29 @@ const ControlsComp = () => {
     };
 
     const saveFunc = async () => {
-        setSaveStatus('Saving...');
+        // Calculate strain for the board
+        const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain();
 
-        try {
-            // Calculate strain for the board
-            const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain();
+        // Calculate HCP for South and North players
+        const deal = Deal.fromPBN(pbn);
+        const southHcp = deal.getHcp(Player.South);
+        const northHcp = deal.getHcp(Player.North);
+        const hcp = `${southHcp}/${northHcp}`;
 
-            // Calculate HCP for South and North players
-            const deal = Deal.fromPBN(pbn);
-            const southHcp = deal.getHcp(Player.South);
-            const northHcp = deal.getHcp(Player.North);
-            const hcp = `${southHcp}/${northHcp}`;
+        const boardData: BoardData = {
+            pbn,
+            strain,
+            hcp
+        };
 
-            const boardData: BoardData = {
-                pbn,
-                strain,
-                hcp
-            };
+        const result = await dao.saveBoard(boardData);
 
-            const result = await dao.saveBoard(boardData);
-
-            if (result.success) {
-                setSaveStatus(`Board saved successfully! ID: ${result.data?.id}`);
-                setTimeout(() => setSaveStatus(''), 3000); // Clear status after 3 seconds
-            } else {
-                setSaveStatus(`Error: ${result.error}`);
-                setTimeout(() => setSaveStatus(''), 5000);
-            }
-        } catch (error) {
-            setSaveStatus(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            setTimeout(() => setSaveStatus(''), 5000);
+        if (result.success) {
+            setMessage(`Board saved successfully! ID: ${result.data?.id}`);
+            setTimeout(() => setMessage(''), 3000); // Clear status after 3 seconds
+        } else {
+            const errorMsg = result.error || 'Failed to save board';
+            showApiError(errorMsg, 'Save board');
         }
     };
 
@@ -78,12 +72,12 @@ const ControlsComp = () => {
                         <button onClick={saveFunc} style={{ marginLeft: '10px' }}>
                             Save
                         </button>
-                        {saveStatus && (
+                        {message && (
                             <span style={{
                                 marginLeft: '10px',
-                                color: saveStatus.includes('Error') ? 'red' : 'green'
+                                color: 'green'
                             }}>
-                                {saveStatus}
+                                {message}
                             </span>
                         )}
                     </div>

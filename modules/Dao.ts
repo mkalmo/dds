@@ -19,7 +19,6 @@ export default class Dao {
     }
 
     async updateBoardDifficulty(boardId: number, difficulty: number): Promise<ApiResponse<BoardData>> {
-        // Use the existing save-board endpoint with the board ID to update difficulty
         return callApi('save-board', 'POST', { id: boardId, difficulty });
     }
 }
