@@ -1,4 +1,4 @@
-import { Player, RANKS, Suit } from "./constants.ts";
+import { Player, RANKS, SUITS, HCP_MAP } from "./constants.ts";
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
 import Board from "./Board.ts";
@@ -6,12 +6,9 @@ import Exercise from "./Exercise.ts";
 import Wasm from "./Wasm.ts";
 import NextPlayCalculator from "./NextPlayCalculator.ts";
 
-const suits = ['C', 'D', 'H', 'S'];
-const hcpMap: any = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
-
 function getDeck() {
     const deck = [];
-    for (let suit of suits) {
+    for (let suit of SUITS) {
         for (let rank of RANKS) {
             deck.push(rank + suit);
         }
@@ -36,7 +33,7 @@ function generateBridgeHand(targetHCP: number, deck: string[]): string[] {
         const nonHCP = [];
         for (let card of deck) {
             const rank = card.slice(0, -1);
-            if (hcpMap[rank]) {
+            if (HCP_MAP[rank]) {
                 hcpCards.push(card);
             } else {
                 nonHCP.push(card);
@@ -54,7 +51,7 @@ function generateBridgeHand(targetHCP: number, deck: string[]): string[] {
 
         const card = cards[index];
         const rank = card.slice(0, -1);
-        const hcp = hcpMap[rank] || 0;
+        const hcp = HCP_MAP[rank] || 0;
 
         // Include this card in the hand
         const withCard: string[] =

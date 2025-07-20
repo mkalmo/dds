@@ -1,3 +1,5 @@
+export const HCP_MAP: Record<string, number> = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
+
 export enum Player {
     North = 'N',
     East = 'E',
