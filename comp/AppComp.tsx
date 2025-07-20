@@ -4,8 +4,9 @@ import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
-import PrintBoardListComp from "./PrintBoardListComp.tsx";
+import GeneratePrintBoardListComp from "./GeneratePrintBoardListComp.tsx";
 import BoardListComp from "./BoardListComp.tsx";
+import ShowPrintBoardListComp from "./ShowPrintBoardListComp.tsx";
 
 declare var Module: DDSModule;
 
@@ -32,8 +33,11 @@ const AppComp = () => {
                 <Route path="/play">
                     <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} />
                 </Route>
-                <Route path="/print/:count">
-                    <PrintBoardListComp />
+                <Route path="/generate-print/:count" render={ (props: any) =>
+                    <GeneratePrintBoardListComp count={props.match.params.count} /> }>
+                </Route>
+                <Route path="/show-print">
+                    <ShowPrintBoardListComp />
                 </Route>
                 <Route path="/boards">
                     <BoardListComp />

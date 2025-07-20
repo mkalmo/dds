@@ -105,7 +105,8 @@ class BoardListComp extends Component<BoardListCompProps, BoardListCompState> {
         return (
             <div className={`board-list ${className || ''}`}>
                 <div className="board-list-navigation">
-                    <Link to="/" className="back-link">← Back</Link>
+                    <Link to="/" className="back-link">← Back</Link>&nbsp;
+                    <Link to="/show-print" className="back-link">Print</Link>
                 </div>
 
                 {error && (

@@ -87,7 +87,7 @@ const ControlsComp = () => {
                             value={count}
                             onChange={(e: any) => setCount(e.target.value)}
                         />
-                        <Link to={`print/${count}`}>Print</Link>
+                        <Link to={`generate-print/${count}`}>Print</Link>
                     </div>
                     <br />
                     <div>
