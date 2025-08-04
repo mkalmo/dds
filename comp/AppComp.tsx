@@ -1,5 +1,6 @@
 import React from 'react';
 import PlayBoardComp from "./PlayBoardComp.tsx";
+import DefensePlayBoardComp from "./DefensePlayBoardComp.tsx";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
@@ -32,6 +33,9 @@ const AppComp = () => {
             <Switch>
                 <Route path="/play">
                     <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} />
+                </Route>
+                <Route path="/defense">
+                    <DefensePlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} />
                 </Route>
                 <Route path="/generate-print/:count" render={ (props: any) =>
                     <GeneratePrintBoardListComp count={props.match.params.count} /> }>

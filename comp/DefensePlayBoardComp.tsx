@@ -15,21 +15,23 @@ type Props = {
 }
 
 type State = {
-    nCards: Card[]
-    sCards: Card[],
+    wCards: Card[]
+    nCards: Card[],
     plays: Play[]
     showLastTrick: boolean
     wrongCard: Card | undefined;
+    showDummy: boolean;
 }
 
-export default class PlayBoardComp extends Component<Props, State> {
+export default class DefensePlayBoardComp extends Component<Props, State> {
 
     state: State = {
+        wCards: [],
         nCards: [],
-        sCards: [],
         plays: [],
         showLastTrick: false,
-        wrongCard: undefined
+        wrongCard: undefined,
+        showDummy: false
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -44,7 +46,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
                 this.setState({ wrongCard: undefined });
 
-                this.makeOpponentMoveIfNeeded(); // first play only
+                this.makeComputerMoveIfNeeded(); // first play only
 
                 this.redrawBoard();
             }
@@ -52,7 +54,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         window.addEventListener('keyup', this.undoKeyHandler);
 
-        this.makeOpponentMoveIfNeeded();
+        this.makeComputerMoveIfNeeded();
 
         this.redrawBoard();
     }
@@ -76,33 +78,38 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         board.play(board.player, card);
 
-        this.makeOpponentMoveIfNeeded();
+        this.makeComputerMoveIfNeeded();
 
         this.redrawBoard();
     }
 
-    makeOpponentMoveIfNeeded(): void {
+    makeComputerMoveIfNeeded(): void {
         const board = this.props.board;
 
-        if (!board.isOpponentsTurn()) {
-            return;
+        let maxMoves = 4 - board.plays.length; // do not start next trick.
+                                               // trick should be visible
+        while (this.shouldAutoPlay() && maxMoves > 0) {
+
+            console.log(board.plays);
+
+            const opponent: Player = board.player;
+            const opponentCard = getCorrectPlays(board)[0];
+
+            board.play(opponent, opponentCard);
+
+            maxMoves--;
         }
+    }
 
-        const opponent: Player = board.player;
-        const opponentCard = getCorrectPlays(board)[0];
-
-        // if (opponentCard.equals(Card.parse('6H'))) {
-        //     opponentCard = Card.parse('2S');
-        // }
-
-        board.play(opponent, opponentCard);
+    shouldAutoPlay(): boolean {
+        return this.props.board.player !== Player.West;
     }
 
     redrawBoard() {
         const board = this.props.board;
 
+        const wCards = board.deal.getPlayerCards(Player.West);
         const nCards = board.deal.getPlayerCards(Player.North);
-        const sCards = board.deal.getPlayerCards(Player.South);
 
         let plays = board.plays;
 
@@ -111,7 +118,10 @@ export default class PlayBoardComp extends Component<Props, State> {
             plays = board.getLastTrick().getPlays();
         }
 
-        this.setState({ nCards, sCards, plays });
+        // Show dummy (North) after first card is played
+        const showDummy = board.tricks.length > 0 || board.plays.length > 0;
+
+        this.setState({ wCards, nCards, plays, showDummy });
     }
 
     render() {
@@ -124,7 +134,7 @@ export default class PlayBoardComp extends Component<Props, State> {
         </React.Fragment>;
 
         const onTrickClickFunc = () => {
-            this.makeOpponentMoveIfNeeded();
+            this.makeComputerMoveIfNeeded();
             this.redrawBoard();
         };
 
@@ -133,30 +143,48 @@ export default class PlayBoardComp extends Component<Props, State> {
                 <div className='play-table-header'>
                     <Link to={'/'}>Back</Link>
                     <div>
-                        {formatStrain(board.strain)} &nbsp;
-                        {board.getNsTrickCount()} / {board.getEwTrickCount()}
+                        Defense Practice - {formatStrain(board.strain)} &nbsp;
+                        {board.getEwTrickCount()} / {board.getNsTrickCount()}
                     </div>
                 </div>
-                <div className="declare-layout play-table">
+                <div className="defence-layout play-table">
+                    <div></div>
+                    <div>
+                        {this.state.showDummy ? (
+                            <PlayHandComp cardClickAction={() => {}} // Dummy cards not clickable
+                                          isValidPlayFunc={() => false}
+                                          isBadPlayFunc={() => false}
+                                          cards={this.state.nCards}/>
+                        ) : (
+                            <div>Dummy</div>
+                        )}
+                    </div>
+                    <div></div>
+
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
                                       isValidPlayFunc={c => board.isValidPlay(c)}
                                       isBadPlayFunc={c => c.equals(this.state.wrongCard)}
-                                      cards={this.state.nCards}/>
+                                      cards={this.state.wCards}/>
                     </div>
+
                     <div>
                         <div onClick={ onTrickClickFunc }>
-                            {this.state.plays.map(play => <div>
+                            {this.state.plays.map(play => <div key={play.player + play.card.toString()}>
                                 <span className='player'>{play.player}&nbsp;</span>
                                 {formatCard(play.card)} </div>)}
                         </div>
                     </div>
+
                     <div>
-                        <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => board.isValidPlay(c)}
-                                      isBadPlayFunc={c => c.equals(this.state.wrongCard)}
-                                      cards={this.state.sCards}/>
+                        <div>East</div>
                     </div>
+
+                    <div></div>
+                    <div>
+                        <div>Declarer</div>
+                    </div>
+                    <div></div>
                 </div>
             </>);
     }

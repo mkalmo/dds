@@ -24,6 +24,13 @@ const ControlsComp = () => {
         });
     };
 
+    const defenseFunc = () => {
+        history.push({
+            pathname: '/defense',
+            search: `?pbn=${encodeURIComponent(pbn)}`
+        });
+    };
+
     const saveFunc = async () => {
         // Calculate strain for the board
         const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain();
@@ -67,7 +74,10 @@ const ControlsComp = () => {
                     <br />
                     <div>
                         <button onClick={playFunc}>
-                            Play
+                            Play (Declarer)
+                        </button>
+                        <button onClick={defenseFunc} style={{ marginLeft: '10px' }}>
+                            Play (Defense)
                         </button>
                         <button onClick={saveFunc} style={{ marginLeft: '10px' }}>
                             Save
