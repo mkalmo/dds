@@ -14,7 +14,6 @@ const GeneratePrintBoardListComp = ({count}: Props) => {
     const wasm = new Wasm(Module);
 
     const exercises = Array.from({length: count}).map((_, i) => {
-        console.log('ex:', i);
         return createExercise(generateBoard(wasm), wasm);
     });
 

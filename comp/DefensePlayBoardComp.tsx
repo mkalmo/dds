@@ -42,7 +42,7 @@ export default class DefensePlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                board.undo();
+                board.undo([Player.West]);
 
                 this.setState({ wrongCard: undefined });
 
@@ -89,9 +89,6 @@ export default class DefensePlayBoardComp extends Component<Props, State> {
         let maxMoves = 4 - board.plays.length; // do not start next trick.
                                                // trick should be visible
         while (this.shouldAutoPlay() && maxMoves > 0) {
-
-            console.log(board.plays);
-
             const opponent: Player = board.player;
             const opponentCard = getCorrectPlays(board)[0];
 

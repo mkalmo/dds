@@ -1,8 +1,8 @@
-import { NEXT_PLAYER, Player, Strain } from './constants.ts';
+import {NEXT_PLAYER, Player, Strain} from './constants.ts';
 import Deal from "./Deal.ts";
 import Card from "./Card.ts";
 import Trick from "./Trick.ts";
-import { Play } from "./types.ts";
+import {Play} from "./types.ts";
 
 export default class Board {
     public readonly deal: Deal;
@@ -101,7 +101,13 @@ export default class Board {
     }
 
     getLastPlay(): Play {
-        return this.plays[this.plays.length - 1];
+        if (this.plays.length > 0) {
+            return [...this.plays].pop();
+        } else if (this.getLastTrick()) {
+            return [...this.getLastTrick().getPlays()].pop();
+        } else {
+            return null;
+        }
     }
 
     toPBN(): string {
@@ -109,11 +115,11 @@ export default class Board {
     }
 
     undoPlay(): void {
-        if (!this.getLastPlay() && !this.getLastTrick()) {
+        if (!this.getLastPlay()) {
             return;
         }
 
-        if (!this.getLastPlay()) {
+        if (this.plays.length == 0) {
             this.plays = this.tricks.pop().getPlays();
         }
 
@@ -124,8 +130,12 @@ export default class Board {
         this.player = lastPlay.player;
     }
 
-    undo(): void {
-        this.undoPlay(); // opponent
-        this.undoPlay(); // us
+    undo(boundaryPlayers: Player[]): void {
+        while (this.getLastPlay()
+                && !boundaryPlayers.includes(this.getLastPlay().player)) {
+
+            this.undoPlay(); // others
+        }
+        this.undoPlay(); // boundary
     }
 }

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Player, Strain } from "../modules/constants.ts";
+import React, {Component} from 'react';
+import {Player, Strain} from "../modules/constants.ts";
 import PlayHandComp from "./PlayHandComp.tsx";
 import Card from "../modules/Card.ts";
 import Board from "../modules/Board.ts";
-import Wasm, { DDSModule } from "../modules/Wasm.ts";
-import { formatStrain } from "../modules/common.ts";
-import { Play } from "../modules/types.ts";
-import { Link } from "react-router-dom";
+import Wasm, {DDSModule} from "../modules/Wasm.ts";
+import {formatStrain} from "../modules/common.ts";
+import {Play} from "../modules/types.ts";
+import {Link} from "react-router-dom";
 
 declare var Module: DDSModule;
 
@@ -40,7 +40,7 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                board.undo();
+                board.undo([Player.North, Player.South]);
 
                 this.setState({ wrongCard: undefined });
 
