@@ -31,13 +31,6 @@ class BoardListComp extends Component<RouteComponentProps, State> {
         return `HCP: ${hcp}`;
     };
 
-    private handleBoardClick = (board: BoardData): void => {
-        this.props.history.push({
-            pathname: '/play',
-            search: `?pbn=${encodeURIComponent(board.pbn)}`
-        });
-    };
-
     private handleDifficultyChange = async (boardId: number, difficulty: number): Promise<void> => {
         const result = await this.dao.updateBoardDifficulty(boardId, difficulty);
 
