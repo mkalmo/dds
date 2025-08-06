@@ -172,6 +172,16 @@ footer {
     display: inline-block;
 }
 
-.board-item .play-link {
-    cursor: pointer;
+.board-item .play-links {
+    /*cursor: pointer;*/
+    float: right;
+}
+
+.board-item .play-links a {
+    text-decoration: none;
+    color: gray;
+}
+
+.board-item .play-links a:hover {
+    text-decoration: underline;
 }

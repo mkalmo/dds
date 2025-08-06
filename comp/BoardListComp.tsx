@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Dao, { BoardData } from "../modules/Dao.ts";
-import { formatStrain } from "../modules/common.ts";
-import { Strain } from "../modules/constants.ts";
 import { showApiError } from "../modules/error-reporter.ts";
 
 interface State {
@@ -105,6 +103,11 @@ class BoardListComp extends Component<RouteComponentProps, State> {
                         &nbsp; &nbsp;
 
                         {this.renderDifficultyRating(board)}
+
+                        <div className="play-links">
+                            <a href="#">Play (declarer)</a>&nbsp;
+                            <a href="#">Play (defender)</a>
+                        </div>
                     </div>
                 ))}
             </div>
