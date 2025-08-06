@@ -92,7 +92,7 @@ class BoardListComp extends Component<RouteComponentProps, State> {
 
                         &nbsp; &nbsp;
 
-                        <span className={'play-link'} onClick={() => this.handleBoardClick(board)}>
+                        <span>
                             {this.formatHcp(board.hcp)}
                         </span>
 
