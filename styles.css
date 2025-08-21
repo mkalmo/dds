@@ -59,7 +59,7 @@ body {
 
 .declare-layout {
     display: grid;
-    grid-template-rows: 17rem 8rem 17rem;
+    grid-template-rows: 16rem 9rem 16rem;
 }
 
 .defence-layout {
@@ -75,9 +75,31 @@ body {
 
 .play-table div {
     justify-self: center;
-    display: inline-block;
     margin-right: 1rem;
     /*border: 1px solid red;*/
+}
+
+.play-table .trick {
+    display: grid;
+    grid-template-rows: 2.6rem 2.6rem 2.6rem;
+    grid-template-columns: 5rem 5rem 5rem;
+    cursor: pointer;
+}
+
+.play-table .trick .north {
+    grid-column: 2;
+}
+
+.play-table .trick .west {
+    grid-column: 1;
+}
+
+.play-table .trick .east {
+    grid-column: 3;
+}
+
+.play-table .trick .south {
+    grid-column: 2;
 }
 
 .play-table .player {

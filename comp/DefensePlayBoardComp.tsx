@@ -135,6 +135,12 @@ export default class DefensePlayBoardComp extends Component<Props, State> {
             this.redrawBoard();
         };
 
+        const getPlay = (player: Player) => {
+            return this.state.plays
+                .filter((play) => play.player === player)
+                .map(p => formatCard(p.card))[0];
+        }
+
         return (
             <>
                 <div className='play-table-header'>
@@ -166,10 +172,12 @@ export default class DefensePlayBoardComp extends Component<Props, State> {
                     </div>
 
                     <div>
-                        <div onClick={ onTrickClickFunc }>
-                            {this.state.plays.map(play => <div key={play.player + play.card.toString()}>
-                                <span className='player'>{play.player}&nbsp;</span>
-                                {formatCard(play.card)} </div>)}
+
+                        <div className="trick" onClick={ onTrickClickFunc }>
+                            <div className="north">{ getPlay(Player.North) }</div>
+                            <div className="west" >{ getPlay(Player.West) }</div>
+                            <div className="east" >{ getPlay(Player.East) }</div>
+                            <div className="south">{ getPlay(Player.South) }</div>
                         </div>
                     </div>
 

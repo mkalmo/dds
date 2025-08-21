@@ -118,15 +118,21 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const board = this.props.board;
 
-        const formatCard = (c: Card) => <React.Fragment key={c.toString()}>
+        const formatCard = (c: Card) => <div key={c.toString()}>
             {c.rank}
             <span className='suit'>{ formatStrain(c.suit as Strain) } </span>
-        </React.Fragment>;
+        </div>;
 
         const onTrickClickFunc = () => {
             this.makeOpponentMoveIfNeeded();
             this.redrawBoard();
         };
+
+        const getPlay = (player: Player) => {
+            return this.state.plays
+                .filter((play) => play.player === player)
+                .map(p => formatCard(p.card))[0];
+        }
 
         return (
             <>
@@ -144,12 +150,11 @@ export default class PlayBoardComp extends Component<Props, State> {
                                       isBadPlayFunc={c => c.equals(this.state.wrongCard)}
                                       cards={this.state.nCards}/>
                     </div>
-                    <div>
-                        <div onClick={ onTrickClickFunc }>
-                            {this.state.plays.map(play => <div>
-                                <span className='player'>{play.player}&nbsp;</span>
-                                {formatCard(play.card)} </div>)}
-                        </div>
+                    <div className="trick" onClick={ onTrickClickFunc }>
+                        <div className="north">{ getPlay(Player.North) }</div>
+                        <div className="west" >{ getPlay(Player.West) }</div>
+                        <div className="east" >{ getPlay(Player.East) }</div>
+                        <div className="south">{ getPlay(Player.South) }</div>
                     </div>
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
