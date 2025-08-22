@@ -89,7 +89,8 @@ export default class PlayBoardComp extends Component<Props, State> {
         }
 
         const opponent: Player = board.player;
-        const opponentCard = getCorrectPlays(board)[0];
+        const opponentCard = getCorrectPlays(board)
+            .sort((a, b) => a.scalarRank - b.scalarRank)[0];
 
         // if (opponentCard.equals(Card.parse('6H'))) {
         //     opponentCard = Card.parse('2S');
