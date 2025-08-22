@@ -40,13 +40,13 @@ const PrintBoardComp = (props: Props) => {
                 <div><PrintHandComp num={1} cards={sCards}/></div>
                 <div></div>
             </div>
-            <div className='tricks'>
-                { props.exercise.tricks.map(
-                    (trick, i) => <TrickComp key={i} trick={ trick } />)  }
-            </div>
-            <footer className='footer'>
-                352{props.exercise.target}8655 { props.exercise.deal.getPbn(Player.West) }
-            </footer>
+            {/*<div className='tricks'>*/}
+            {/*    { props.exercise.tricks.map(*/}
+            {/*        (trick, i) => <TrickComp key={i} trick={ trick } />)  }*/}
+            {/*</div>*/}
+            {/*<footer className='footer'>*/}
+            {/*    352{props.exercise.target}8655 { props.exercise.deal.getPbn(Player.West) }*/}
+            {/*</footer>*/}
         </div>);
 }
 
