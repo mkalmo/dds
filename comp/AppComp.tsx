@@ -5,6 +5,7 @@ import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
+import { Strain } from "../modules/constants.ts";
 import GeneratePrintBoardListComp from "./GeneratePrintBoardListComp.tsx";
 import BoardListComp from "./BoardListComp.tsx";
 import ShowPrintBoardListComp from "./ShowPrintBoardListComp.tsx";
@@ -23,7 +24,9 @@ const AppComp = () => {
     const getPlayBoard = () => {
         const pbn = query.get('pbn') || 'W:2... 3... 4... 5...';
 
-        const strain = new Wasm(Module).calcDDTable(pbn).getBestStrain()
+        // Use provided strain parameter if available, otherwise calculate it
+        const providedStrain = query.get('strain') as Strain;
+        const strain = providedStrain || new Wasm(Module).calcDDTable(pbn).getBestStrain();
 
         return new Board(pbn, strain);
     };

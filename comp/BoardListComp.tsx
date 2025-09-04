@@ -98,8 +98,8 @@ class BoardListComp extends Component<RouteComponentProps, State> {
                         {this.renderDifficultyRating(board)}
 
                         <div className="play-links">
-                            <Link to={`/play?pbn=${encodeURIComponent(board.pbn)}`}>Play (declarer)</Link>&nbsp;
-                            <Link to={`/defense?pbn=${encodeURIComponent(board.pbn)}`}>Play (defender)</Link>
+                            <Link to={`/play?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>Play (declarer)</Link>&nbsp;
+                            <Link to={`/defense?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>Play (defender)</Link>
                         </div>
                     </div>
                 ))}

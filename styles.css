@@ -57,6 +57,10 @@ body {
     padding: 1px;
 }
 
+.print-table .hand span:not(:last-child) {
+    padding-right: 0.8rem;
+}
+
 .declare-layout {
     display: grid;
     grid-template-rows: 16rem 9rem 16rem;

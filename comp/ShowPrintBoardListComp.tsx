@@ -38,7 +38,9 @@ class ShowPrintBoardListComp extends Component<{}, State> {
         const boards = result.data || [];
         const wasm = new Wasm(Module);
 
-        const entries = boards.map(b => {
+        const entries = boards
+            // .filter(b => b.id >= 11 && b.id <= 27)
+            .map(b => {
             return {
                 id: b.id,
                 exercise: createExercise(createBoard(b.pbn, wasm), wasm)

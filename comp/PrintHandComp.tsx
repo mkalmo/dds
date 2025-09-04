@@ -11,14 +11,14 @@ const PrintHandComp = (props: Props) => {
 
     const suits = Suits
         .map(suit => props.cards.filter(card => card.suit === suit)
-            .map(c => c.rank).join(' '));
+            .map(c => <span>{c.rank}</span>));
 
     return (
         <div className="hand">
-            &#9824; {suits[0]}<br/>
-            &#9829; {suits[1]}<br/>
-            &#9830; {suits[2]}<br/>
-            &#9827; {suits[3]}<br/>
+            <div><span>&#9824;</span>{suits[0]}</div>
+            <div><span>&#9829;</span>{suits[1]}</div>
+            <div><span>&#9830;</span>{suits[2]}</div>
+            <div><span>&#9827;</span>{suits[3]}</div>
         </div>
     );
 }
