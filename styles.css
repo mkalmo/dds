@@ -61,12 +61,7 @@ body {
     padding-right: 0.8rem;
 }
 
-.declare-layout {
-    display: grid;
-    grid-template-rows: 16rem 9rem 16rem;
-}
-
-.defence-layout {
+.board-layout {
     display: grid;
     grid-template-rows: 17rem 15rem auto;
     grid-template-columns: 33% auto 33%;

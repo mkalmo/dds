@@ -1,0 +1,12 @@
+comp/PlayBoardComp.tsx has a link "Manual".
+this link should put game to manual state:
+- all hands are visible
+- no cards are played automatically, user plays from all hands
+- link name becomes "Normal"
+
+The idea is to explore paths where opponent makes certain moves.
+
+There is a logic marked with "accept on second click"
+  this should be the same on all hands
+
+After clicking "Normal" came should continue from this position.

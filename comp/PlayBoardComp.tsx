@@ -17,9 +17,12 @@ type Props = {
 type State = {
     nCards: Card[]
     sCards: Card[],
+    eCards: Card[],
+    wCards: Card[],
     plays: Play[]
     showLastTrick: boolean
     wrongCard: Card | undefined;
+    manualMode: boolean;
 }
 
 export default class PlayBoardComp extends Component<Props, State> {
@@ -27,9 +30,12 @@ export default class PlayBoardComp extends Component<Props, State> {
     state: State = {
         nCards: [],
         sCards: [],
+        eCards: [],
+        wCards: [],
         plays: [],
         showLastTrick: false,
-        wrongCard: undefined
+        wrongCard: undefined,
+        manualMode: false
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -40,7 +46,11 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                board.undo([Player.North, Player.South]);
+                if (this.state.manualMode) {
+                    board.undoPlay();
+                } else {
+                    board.undo([Player.North, Player.South]);
+                }
 
                 this.setState({ wrongCard: undefined });
 
@@ -84,6 +94,10 @@ export default class PlayBoardComp extends Component<Props, State> {
     makeOpponentMoveIfNeeded(): void {
         const board = this.props.board;
 
+        if (this.state.manualMode) {
+            return;
+        }
+
         if (!board.isOpponentsTurn()) {
             return;
         }
@@ -91,10 +105,6 @@ export default class PlayBoardComp extends Component<Props, State> {
         const opponent: Player = board.player;
         const opponentCard = getCorrectPlays(board)
             .sort((a, b) => a.scalarRank - b.scalarRank)[0];
-
-        // if (opponentCard.equals(Card.parse('6H'))) {
-        //     opponentCard = Card.parse('2S');
-        // }
 
         board.play(opponent, opponentCard);
     }
@@ -104,6 +114,8 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const nCards = board.deal.getPlayerCards(Player.North);
         const sCards = board.deal.getPlayerCards(Player.South);
+        const eCards = board.deal.getPlayerCards(Player.East);
+        const wCards = board.deal.getPlayerCards(Player.West);
 
         let plays = board.plays;
 
@@ -112,7 +124,16 @@ export default class PlayBoardComp extends Component<Props, State> {
             plays = board.getLastTrick().getPlays();
         }
 
-        this.setState({ nCards, sCards, plays });
+        this.setState({ nCards, sCards, eCards, wCards, plays });
+    }
+
+    toggleManualMode = () => {
+        this.setState({ manualMode: !this.state.manualMode, wrongCard: undefined }, () => {
+            if (!this.state.manualMode) {
+                this.makeOpponentMoveIfNeeded();
+                this.redrawBoard();
+            }
+        });
     }
 
     render() {
@@ -135,34 +156,67 @@ export default class PlayBoardComp extends Component<Props, State> {
                 .map(p => formatCard(p.card))[0];
         }
 
+        const trickDiv = (
+            <div className="trick" onClick={ onTrickClickFunc }>
+                <div className="north">{ getPlay(Player.North) }</div>
+                <div className="west" >{ getPlay(Player.West) }</div>
+                <div className="east" >{ getPlay(Player.East) }</div>
+                <div className="south">{ getPlay(Player.South) }</div>
+            </div>
+        );
+
+        const isValidPlayForPlayer = (c: Card, player: Player) =>
+            board.player === player && board.isValidPlay(c);
+
+        const isBadPlayForPlayer = (c: Card, player: Player) =>
+            board.player === player && c.equals(this.state.wrongCard);
+
+        const manualMode = this.state.manualMode;
+
         return (
             <>
                 <div className='play-table-header'>
-                    <Link to={'/'}>Back</Link>
+                    <div>
+                        <Link to={'/'}>Back</Link>&nbsp;
+                        <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
+                            {manualMode ? 'Normal' : 'Manual'}
+                        </span>
+                    </div>
                     <div>
                         {formatStrain(board.strain)} &nbsp;
                         {board.getNsTrickCount()} / {board.getEwTrickCount()}
                     </div>
                 </div>
-                <div className="declare-layout play-table">
+                <div className="board-layout play-table">
+                    <div></div>
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => board.isValidPlay(c)}
-                                      isBadPlayFunc={c => c.equals(this.state.wrongCard)}
+                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.North)}
+                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.North)}
                                       cards={this.state.nCards}/>
                     </div>
-                    <div className="trick" onClick={ onTrickClickFunc }>
-                        <div className="north">{ getPlay(Player.North) }</div>
-                        <div className="west" >{ getPlay(Player.West) }</div>
-                        <div className="east" >{ getPlay(Player.East) }</div>
-                        <div className="south">{ getPlay(Player.South) }</div>
+                    <div></div>
+                    <div>
+                        {manualMode && <PlayHandComp cardClickAction={c => this.playCard(c)}
+                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.West)}
+                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.West)}
+                                      cards={this.state.wCards}/>}
                     </div>
+                    {trickDiv}
+                    <div>
+                        {manualMode && <PlayHandComp cardClickAction={c => this.playCard(c)}
+                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.East)}
+                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.East)}
+                                      cards={this.state.eCards}/>}
+                    </div>
+                    <div></div>
                     <div>
                         <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => board.isValidPlay(c)}
-                                      isBadPlayFunc={c => c.equals(this.state.wrongCard)}
+                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.South)}
+                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.South)}
                                       cards={this.state.sCards}/>
                     </div>
+                    <div></div>
                 </div>
             </>);
     }

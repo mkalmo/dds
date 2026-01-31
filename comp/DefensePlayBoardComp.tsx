@@ -150,7 +150,7 @@ export default class DefensePlayBoardComp extends Component<Props, State> {
                         {board.getEwTrickCount()} / {board.getNsTrickCount()}
                     </div>
                 </div>
-                <div className="defence-layout play-table">
+                <div className="board-layout play-table">
                     <div></div>
                     <div>
                         {this.state.showDummy ? (
