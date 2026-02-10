@@ -50,7 +50,11 @@ export default class PlayBoardComp extends Component<Props, State> {
             if (event.key === 'Backspace') {
 
                 if (this.props.mode === 'defense') {
-                    board.undo([Player.West]);
+                    if (this.state.manualMode) {
+                        board.undoPlay();
+                    } else {
+                        board.undo([Player.West]);
+                    }
                 } else if (this.state.manualMode) {
                     board.undoPlay();
                 } else {
@@ -199,27 +203,32 @@ export default class PlayBoardComp extends Component<Props, State> {
             );
         };
 
-        // North: defense shows readonly after first play; declarer always clickable
+        // North: defense shows readonly after first play; clickable in manual mode
         const northVisible = !isDefense || this.state.showDummy;
-        const northClickable = !isDefense;
+        const northClickable = !isDefense || manualMode;
 
         // West: defense always clickable; declarer only in manual mode
         const westVisible = isDefense || manualMode;
         const westClickable = isDefense || manualMode;
 
-        // East: declarer only in manual mode; defense hidden
-        const eastVisible = !isDefense && manualMode;
-        const eastClickable = eastVisible;
+        // East: manual mode in either declarer or defense
+        const eastVisible = manualMode;
+        const eastClickable = manualMode;
 
-        // South: declarer always clickable; defense hidden
-        const southVisible = !isDefense;
+        // South: declarer always clickable; defense only in manual mode
+        const southVisible = !isDefense || manualMode;
         const southClickable = southVisible;
 
         const header = isDefense ? (
             <div className='play-table-header'>
-                <Link to={'/'}>Back</Link>
                 <div>
-                    Defense Practice - {formatStrain(board.strain)} &nbsp;
+                    <Link to={'/'}>Back</Link>&nbsp;
+                    <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
+                        {manualMode ? 'Normal' : 'Manual'}
+                    </span>
+                </div>
+                <div>
+                    Defense - {formatStrain(board.strain)} &nbsp;
                     {board.getEwTrickCount()} / {board.getNsTrickCount()}
                 </div>
             </div>
