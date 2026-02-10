@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import ControlsComp from "./ControlsComp.tsx";
 import Board from "../modules/Board.ts";
 import Wasm, { DDSModule } from "../modules/Wasm.ts";
-import { Strain } from "../modules/constants.ts";
+import { Player, Strain } from "../modules/constants.ts";
 import GeneratePrintBoardListComp from "./GeneratePrintBoardListComp.tsx";
 import BoardListComp from "./BoardListComp.tsx";
 import ShowPrintBoardListComp from "./ShowPrintBoardListComp.tsx";
@@ -36,8 +36,11 @@ const AppComp = () => {
                 <Route path="/play">
                     <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} mode="declarer" />
                 </Route>
-                <Route path="/defense">
-                    <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} mode="defense" />
+                <Route path="/defence_w">
+                    <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} mode="defense" defensePlayer={Player.West} />
+                </Route>
+                <Route path="/defence_e">
+                    <PlayBoardComp key={query.get('pbn') || 'default'} board={getPlayBoard()} mode="defense" defensePlayer={Player.East} />
                 </Route>
                 <Route path="/generate-print/:count" render={ (props: any) =>
                     <GeneratePrintBoardListComp count={props.match.params.count} /> }>

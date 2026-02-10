@@ -99,7 +99,8 @@ class BoardListComp extends Component<RouteComponentProps, State> {
 
                         <div className="play-links">
                             <Link to={`/play?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>Play (declarer)</Link>&nbsp;
-                            <Link to={`/defense?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>Play (defender)</Link>
+                            <Link to={`/defence_w?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>defender W</Link>&nbsp;
+                            <Link to={`/defence_e?pbn=${encodeURIComponent(board.pbn)}&strain=${encodeURIComponent(board.strain)}`}>defender E</Link>
                         </div>
                     </div>
                 ))}

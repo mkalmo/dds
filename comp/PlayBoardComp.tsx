@@ -12,7 +12,8 @@ declare var Module: DDSModule;
 
 type Props = {
     board: Board,
-    mode: 'declarer' | 'defense'
+    mode: 'declarer' | 'defense',
+    defensePlayer?: Player
 }
 
 type State = {
@@ -53,7 +54,7 @@ export default class PlayBoardComp extends Component<Props, State> {
                     if (this.state.manualMode) {
                         board.undoPlay();
                     } else {
-                        board.undo([Player.West]);
+                        board.undo([this.props.defensePlayer]);
                     }
                 } else if (this.state.manualMode) {
                     board.undoPlay();
@@ -109,7 +110,7 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         if (this.props.mode === 'defense') {
             let maxMoves = 4 - board.plays.length;
-            while (board.player !== Player.West && maxMoves > 0) {
+            while (board.player !== this.props.defensePlayer && maxMoves > 0) {
                 board.play(board.player, getCorrectPlays(board)[0]);
                 maxMoves--;
             }
@@ -203,17 +204,19 @@ export default class PlayBoardComp extends Component<Props, State> {
             );
         };
 
+        const defensePlayer = this.props.defensePlayer;
+
         // North: defense shows readonly after first play; clickable in manual mode
         const northVisible = !isDefense || this.state.showDummy;
         const northClickable = !isDefense || manualMode;
 
-        // West: defense always clickable; declarer only in manual mode
-        const westVisible = isDefense || manualMode;
-        const westClickable = isDefense || manualMode;
+        // West: defense(W) always clickable; defense(E) hidden; declarer only in manual mode
+        const westVisible = (isDefense && defensePlayer === Player.West) || manualMode;
+        const westClickable = westVisible;
 
-        // East: manual mode in either declarer or defense
-        const eastVisible = manualMode;
-        const eastClickable = manualMode;
+        // East: defense(E) always clickable; defense(W) hidden; declarer only in manual mode
+        const eastVisible = (isDefense && defensePlayer === Player.East) || manualMode;
+        const eastClickable = eastVisible;
 
         // South: declarer always clickable; defense only in manual mode
         const southVisible = !isDefense || manualMode;

@@ -24,9 +24,16 @@ const ControlsComp = () => {
         });
     };
 
-    const defenseFunc = () => {
+    const defenseWFunc = () => {
         history.push({
-            pathname: '/defense',
+            pathname: '/defence_w',
+            search: `?pbn=${encodeURIComponent(pbn)}`
+        });
+    };
+
+    const defenseEFunc = () => {
+        history.push({
+            pathname: '/defence_e',
             search: `?pbn=${encodeURIComponent(pbn)}`
         });
     };
@@ -76,8 +83,11 @@ const ControlsComp = () => {
                         <button onClick={playFunc}>
                             Play (Declarer)
                         </button>
-                        <button onClick={defenseFunc} style={{ marginLeft: '10px' }}>
-                            Play (Defense)
+                        <button onClick={defenseWFunc} style={{ marginLeft: '10px' }}>
+                            Defense (W)
+                        </button>
+                        <button onClick={defenseEFunc} style={{ marginLeft: '10px' }}>
+                            Defense (E)
                         </button>
                         <button onClick={saveFunc} style={{ marginLeft: '10px' }}>
                             Save
