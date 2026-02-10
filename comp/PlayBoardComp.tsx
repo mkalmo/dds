@@ -11,7 +11,8 @@ import {Link} from "react-router-dom";
 declare var Module: DDSModule;
 
 type Props = {
-    board: Board
+    board: Board,
+    mode: 'declarer' | 'defense'
 }
 
 type State = {
@@ -23,6 +24,7 @@ type State = {
     showLastTrick: boolean
     wrongCard: Card | undefined;
     manualMode: boolean;
+    showDummy: boolean;
 }
 
 export default class PlayBoardComp extends Component<Props, State> {
@@ -35,7 +37,8 @@ export default class PlayBoardComp extends Component<Props, State> {
         plays: [],
         showLastTrick: false,
         wrongCard: undefined,
-        manualMode: false
+        manualMode: false,
+        showDummy: false
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -46,7 +49,9 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                if (this.state.manualMode) {
+                if (this.props.mode === 'defense') {
+                    board.undo([Player.West]);
+                } else if (this.state.manualMode) {
                     board.undoPlay();
                 } else {
                     board.undo([Player.North, Player.South]);
@@ -98,15 +103,22 @@ export default class PlayBoardComp extends Component<Props, State> {
             return;
         }
 
-        if (!board.isOpponentsTurn()) {
-            return;
+        if (this.props.mode === 'defense') {
+            let maxMoves = 4 - board.plays.length;
+            while (board.player !== Player.West && maxMoves > 0) {
+                board.play(board.player, getCorrectPlays(board)[0]);
+                maxMoves--;
+            }
+        } else {
+            if (!board.isOpponentsTurn()) {
+                return;
+            }
+
+            const opponentCard = getCorrectPlays(board)
+                .sort((a, b) => a.scalarRank - b.scalarRank)[0];
+
+            board.play(board.player, opponentCard);
         }
-
-        const opponent: Player = board.player;
-        const opponentCard = getCorrectPlays(board)
-            .sort((a, b) => a.scalarRank - b.scalarRank)[0];
-
-        board.play(opponent, opponentCard);
     }
 
     redrawBoard() {
@@ -124,7 +136,9 @@ export default class PlayBoardComp extends Component<Props, State> {
             plays = board.getLastTrick().getPlays();
         }
 
-        this.setState({ nCards, sCards, eCards, wCards, plays });
+        const showDummy = board.tricks.length > 0 || board.plays.length > 0;
+
+        this.setState({ nCards, sCards, eCards, wCards, plays, showDummy });
     }
 
     toggleManualMode = () => {
@@ -139,6 +153,7 @@ export default class PlayBoardComp extends Component<Props, State> {
     render() {
 
         const board = this.props.board;
+        const isDefense = this.props.mode === 'defense';
 
         const formatCard = (c: Card) => <div key={c.toString()}>
             {c.rank}
@@ -173,49 +188,68 @@ export default class PlayBoardComp extends Component<Props, State> {
 
         const manualMode = this.state.manualMode;
 
+        const renderHand = (player: Player, cards: Card[], visible: boolean, clickable: boolean) => {
+            if (!visible) return null;
+            return (
+                <PlayHandComp
+                    cardClickAction={clickable ? (c) => this.playCard(c) : () => {}}
+                    isValidPlayFunc={clickable ? (c) => isValidPlayForPlayer(c, player) : () => false}
+                    isBadPlayFunc={clickable ? (c) => isBadPlayForPlayer(c, player) : () => false}
+                    cards={cards}/>
+            );
+        };
+
+        // North: defense shows readonly after first play; declarer always clickable
+        const northVisible = !isDefense || this.state.showDummy;
+        const northClickable = !isDefense;
+
+        // West: defense always clickable; declarer only in manual mode
+        const westVisible = isDefense || manualMode;
+        const westClickable = isDefense || manualMode;
+
+        // East: declarer only in manual mode; defense hidden
+        const eastVisible = !isDefense && manualMode;
+        const eastClickable = eastVisible;
+
+        // South: declarer always clickable; defense hidden
+        const southVisible = !isDefense;
+        const southClickable = southVisible;
+
+        const header = isDefense ? (
+            <div className='play-table-header'>
+                <Link to={'/'}>Back</Link>
+                <div>
+                    Defense Practice - {formatStrain(board.strain)} &nbsp;
+                    {board.getEwTrickCount()} / {board.getNsTrickCount()}
+                </div>
+            </div>
+        ) : (
+            <div className='play-table-header'>
+                <div>
+                    <Link to={'/'}>Back</Link>&nbsp;
+                    <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
+                        {manualMode ? 'Normal' : 'Manual'}
+                    </span>
+                </div>
+                <div>
+                    {formatStrain(board.strain)} &nbsp;
+                    {board.getNsTrickCount()} / {board.getEwTrickCount()}
+                </div>
+            </div>
+        );
+
         return (
             <>
-                <div className='play-table-header'>
-                    <div>
-                        <Link to={'/'}>Back</Link>&nbsp;
-                        <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
-                            {manualMode ? 'Normal' : 'Manual'}
-                        </span>
-                    </div>
-                    <div>
-                        {formatStrain(board.strain)} &nbsp;
-                        {board.getNsTrickCount()} / {board.getEwTrickCount()}
-                    </div>
-                </div>
+                {header}
                 <div className="board-layout play-table">
                     <div></div>
-                    <div>
-                        <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.North)}
-                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.North)}
-                                      cards={this.state.nCards}/>
-                    </div>
+                    <div>{renderHand(Player.North, this.state.nCards, northVisible, northClickable)}</div>
                     <div></div>
-                    <div>
-                        {manualMode && <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.West)}
-                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.West)}
-                                      cards={this.state.wCards}/>}
-                    </div>
+                    <div>{renderHand(Player.West, this.state.wCards, westVisible, westClickable)}</div>
                     {trickDiv}
-                    <div>
-                        {manualMode && <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.East)}
-                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.East)}
-                                      cards={this.state.eCards}/>}
-                    </div>
+                    <div>{renderHand(Player.East, this.state.eCards, eastVisible, eastClickable)}</div>
                     <div></div>
-                    <div>
-                        <PlayHandComp cardClickAction={c => this.playCard(c)}
-                                      isValidPlayFunc={c => isValidPlayForPlayer(c, Player.South)}
-                                      isBadPlayFunc={c => isBadPlayForPlayer(c, Player.South)}
-                                      cards={this.state.sCards}/>
-                    </div>
+                    <div>{renderHand(Player.South, this.state.sCards, southVisible, southClickable)}</div>
                     <div></div>
                 </div>
             </>);
