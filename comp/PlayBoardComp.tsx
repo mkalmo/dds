@@ -202,7 +202,24 @@ export default class PlayBoardComp extends Component<Props, State> {
         const isBadPlayForPlayer = (c: Card, player: Player) =>
             board.player === player && c.equals(this.state.wrongCard);
 
-        const renderHand = (player: Player, cards: Card[], visible: boolean, clickable: boolean) => {
+        const renderHand = (player: Player, cards: Card[]) => {
+            let visible: boolean;
+            let clickable: boolean;
+
+            if (player === Player.North) {
+                visible = !this.isDefense || this.state.showDummy;
+                clickable = !this.isDefense || this.isManual;
+            } else if (player === Player.South) {
+                visible = !this.isDefense || this.isManual;
+                clickable = visible;
+            } else if (player === Player.West) {
+                visible = this.state.mode === 'defence_w' || this.isManual;
+                clickable = visible;
+            } else {
+                visible = this.state.mode === 'defence_e' || this.isManual;
+                clickable = visible;
+            }
+
             if (!visible) return null;
             return (
                 <PlayHandComp
@@ -212,18 +229,6 @@ export default class PlayBoardComp extends Component<Props, State> {
                     cards={cards}/>
             );
         };
-
-        const northVisible = !this.isDefense || this.state.showDummy;
-        const northClickable = !this.isDefense || this.isManual;
-
-        const westVisible = this.state.mode === 'defence_w' || this.isManual;
-        const westClickable = westVisible;
-
-        const eastVisible = this.state.mode === 'defence_e' || this.isManual;
-        const eastClickable = eastVisible;
-
-        const southVisible = !this.isDefense || this.isManual;
-        const southClickable = southVisible;
 
         const modeLink = (targetMode: Mode, label: string) =>
             mode === targetMode
@@ -255,13 +260,13 @@ export default class PlayBoardComp extends Component<Props, State> {
                 {header}
                 <div className="board-layout play-table">
                     <div></div>
-                    <div>{renderHand(Player.North, this.state.nCards, northVisible, northClickable)}</div>
+                    <div>{renderHand(Player.North, this.state.nCards)}</div>
                     <div></div>
-                    <div>{renderHand(Player.West, this.state.wCards, westVisible, westClickable)}</div>
+                    <div>{renderHand(Player.West, this.state.wCards)}</div>
                     {trickDiv}
-                    <div>{renderHand(Player.East, this.state.eCards, eastVisible, eastClickable)}</div>
+                    <div>{renderHand(Player.East, this.state.eCards)}</div>
                     <div></div>
-                    <div>{renderHand(Player.South, this.state.sCards, southVisible, southClickable)}</div>
+                    <div>{renderHand(Player.South, this.state.sCards)}</div>
                     <div></div>
                 </div>
             </>);
