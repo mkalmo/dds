@@ -10,13 +10,15 @@ import {Link} from "react-router-dom";
 
 declare var Module: DDSModule;
 
+type Mode = 'declarer' | 'defence_e' | 'defence_w' | 'manual';
+
 type Props = {
     board: Board,
-    mode: 'declarer' | 'defense',
-    defensePlayer?: Player
+    mode: Mode
 }
 
 type State = {
+    mode: Mode;
     nCards: Card[]
     sCards: Card[],
     eCards: Card[],
@@ -24,13 +26,13 @@ type State = {
     plays: Play[]
     showLastTrick: boolean
     wrongCard: Card | undefined;
-    manualMode: boolean;
     showDummy: boolean;
 }
 
 export default class PlayBoardComp extends Component<Props, State> {
 
     state: State = {
+        mode: this.props.mode,
         nCards: [],
         sCards: [],
         eCards: [],
@@ -38,8 +40,21 @@ export default class PlayBoardComp extends Component<Props, State> {
         plays: [],
         showLastTrick: false,
         wrongCard: undefined,
-        manualMode: false,
         showDummy: false
+    }
+
+    get isManual(): boolean {
+        return this.state.mode === 'manual';
+    }
+
+    get isDefense(): boolean {
+        return this.state.mode === 'defence_e' || this.state.mode === 'defence_w';
+    }
+
+    get defensePlayer(): Player | undefined {
+        if (this.state.mode === 'defence_w') return Player.West;
+        if (this.state.mode === 'defence_e') return Player.East;
+        return undefined;
     }
 
     undoKeyHandler: (event: any) => void = undefined;
@@ -50,14 +65,10 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.undoKeyHandler = (event: any) => {
             if (event.key === 'Backspace') {
 
-                if (this.props.mode === 'defense') {
-                    if (this.state.manualMode) {
-                        board.undoPlay();
-                    } else {
-                        board.undo([this.props.defensePlayer]);
-                    }
-                } else if (this.state.manualMode) {
+                if (this.isManual) {
                     board.undoPlay();
+                } else if (this.isDefense) {
+                    board.undo([this.defensePlayer]);
                 } else {
                     board.undo([Player.North, Player.South]);
                 }
@@ -104,13 +115,13 @@ export default class PlayBoardComp extends Component<Props, State> {
     makeOpponentMoveIfNeeded(): void {
         const board = this.props.board;
 
-        if (this.state.manualMode) {
+        if (this.isManual) {
             return;
         }
 
-        if (this.props.mode === 'defense') {
+        if (this.isDefense) {
             let maxMoves = 4 - board.plays.length;
-            while (board.player !== this.props.defensePlayer && maxMoves > 0) {
+            while (board.player !== this.defensePlayer && maxMoves > 0) {
                 board.play(board.player, getCorrectPlays(board)[0]);
                 maxMoves--;
             }
@@ -146,9 +157,9 @@ export default class PlayBoardComp extends Component<Props, State> {
         this.setState({ nCards, sCards, eCards, wCards, plays, showDummy });
     }
 
-    toggleManualMode = () => {
-        this.setState({ manualMode: !this.state.manualMode, wrongCard: undefined }, () => {
-            if (!this.state.manualMode) {
+    setMode = (mode: Mode) => {
+        this.setState({ mode, wrongCard: undefined }, () => {
+            if (!this.isManual) {
                 this.makeOpponentMoveIfNeeded();
                 this.redrawBoard();
             }
@@ -158,7 +169,7 @@ export default class PlayBoardComp extends Component<Props, State> {
     render() {
 
         const board = this.props.board;
-        const isDefense = this.props.mode === 'defense';
+        const mode = this.state.mode;
 
         const formatCard = (c: Card) => <div key={c.toString()}>
             {c.rank}
@@ -191,8 +202,6 @@ export default class PlayBoardComp extends Component<Props, State> {
         const isBadPlayForPlayer = (c: Card, player: Player) =>
             board.player === player && c.equals(this.state.wrongCard);
 
-        const manualMode = this.state.manualMode;
-
         const renderHand = (player: Player, cards: Card[], visible: boolean, clickable: boolean) => {
             if (!visible) return null;
             return (
@@ -204,48 +213,39 @@ export default class PlayBoardComp extends Component<Props, State> {
             );
         };
 
-        const defensePlayer = this.props.defensePlayer;
+        const northVisible = !this.isDefense || this.state.showDummy;
+        const northClickable = !this.isDefense || this.isManual;
 
-        // North: defense shows readonly after first play; clickable in manual mode
-        const northVisible = !isDefense || this.state.showDummy;
-        const northClickable = !isDefense || manualMode;
-
-        // West: defense(W) always clickable; defense(E) hidden; declarer only in manual mode
-        const westVisible = (isDefense && defensePlayer === Player.West) || manualMode;
+        const westVisible = this.state.mode === 'defence_w' || this.isManual;
         const westClickable = westVisible;
 
-        // East: defense(E) always clickable; defense(W) hidden; declarer only in manual mode
-        const eastVisible = (isDefense && defensePlayer === Player.East) || manualMode;
+        const eastVisible = this.state.mode === 'defence_e' || this.isManual;
         const eastClickable = eastVisible;
 
-        // South: declarer always clickable; defense only in manual mode
-        const southVisible = !isDefense || manualMode;
+        const southVisible = !this.isDefense || this.isManual;
         const southClickable = southVisible;
 
-        const header = isDefense ? (
+        const modeLink = (targetMode: Mode, label: string) =>
+            mode === targetMode
+                ? <span>{label}</span>
+                : <span onClick={() => this.setMode(targetMode)} style={{cursor: 'pointer'}}>{label}</span>;
+
+        const score = this.isDefense
+            ? <>{board.getEwTrickCount()} / {board.getNsTrickCount()}</>
+            : <>{board.getNsTrickCount()} / {board.getEwTrickCount()}</>;
+
+        const header = (
             <div className='play-table-header'>
                 <div>
                     <Link to={'/'}>Back</Link>&nbsp;
-                    <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
-                        {manualMode ? 'Normal' : 'Manual'}
-                    </span>
-                </div>
-                <div>
-                    Defense - {formatStrain(board.strain)} &nbsp;
-                    {board.getEwTrickCount()} / {board.getNsTrickCount()}
-                </div>
-            </div>
-        ) : (
-            <div className='play-table-header'>
-                <div>
-                    <Link to={'/'}>Back</Link>&nbsp;
-                    <span onClick={this.toggleManualMode} style={{cursor: 'pointer'}}>
-                        {manualMode ? 'Normal' : 'Manual'}
-                    </span>
+                    {modeLink('declarer', 'Declarer')}&nbsp;
+                    {modeLink('defence_w', 'Defence W')}&nbsp;
+                    {modeLink('defence_e', 'Defence E')}&nbsp;
+                    {modeLink('manual', 'Manual')}
                 </div>
                 <div>
                     {formatStrain(board.strain)} &nbsp;
-                    {board.getNsTrickCount()} / {board.getEwTrickCount()}
+                    {score}
                 </div>
             </div>
         );
