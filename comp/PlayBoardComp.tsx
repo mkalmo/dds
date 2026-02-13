@@ -243,10 +243,10 @@ export default class PlayBoardComp extends Component<Props, State> {
             <div className='play-table-header'>
                 <div>
                     <Link to={'/'}>Back</Link>&nbsp;
-                    {modeLink('declarer', 'Declarer')}&nbsp;
-                    {modeLink('defence_w', 'Defence W')}&nbsp;
-                    {modeLink('defence_e', 'Defence E')}&nbsp;
-                    {modeLink('manual', 'Manual')}
+                    {modeLink('declarer', 'D')}&nbsp;
+                    {modeLink('defence_w', 'W')}&nbsp;
+                    {modeLink('defence_e', 'E')}&nbsp;
+                    {modeLink('manual', 'M')}
                 </div>
                 <div>
                     {formatStrain(board.strain)} &nbsp;
