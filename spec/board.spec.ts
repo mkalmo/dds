@@ -37,12 +37,12 @@ test('Generates valid trick start Pbn (for solver)', () => {
     board.play(Player.South, Card.parse('5S'));
 
     expect(board.getTrickStartPbn())
-        .toBe('S:...A ...J ...Q ...K');
+        .toBe('S:.8..A .6..J .7..Q .9..K');
 
     board.play(Player.South, Card.parse('AC'));
 
     expect(board.getTrickStartPbn())
-        .toBe('S:...A ...J ...Q ...K');
+        .toBe('S:.8..A .6..J .7..Q .9..K');
 });
 
 test('Tells whether it is opponents turn', () => {
