@@ -8,7 +8,7 @@ export default class Trick {
 
     constructor(public readonly strain: string, plays: Play[]) {
 
-        if (plays.length > 4) {
+        if (plays.length !== 4) {
             throw Error('incomplete trick');
         }
 
