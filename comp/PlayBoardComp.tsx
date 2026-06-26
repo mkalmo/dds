@@ -115,7 +115,7 @@ export default class PlayBoardComp extends Component<Props, State> {
     makeOpponentMoveIfNeeded(): void {
         const board = this.props.board;
 
-        if (this.isManual) {
+        if (this.isManual || board.isCompleted()) {
             return;
         }
 

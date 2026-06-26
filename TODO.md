@@ -1,21 +1,4 @@
-# TODO — Issues found in code review (2026-06-10)
-
-Build status at time of review: `tsc --noEmit` clean, webpack build OK (bundle-size warnings only), all 7 Jest tests pass.
-
 ## Confirmed bugs
-
-- [ ] **`modules/Trick.ts` — inverted validation in constructor (line 11)**
-  `if (plays.length > 4) throw Error('incomplete trick')` never fires (a trick can't exceed 4 plays).
-  Should be `plays.length !== 4`. An incomplete trick crashes `winner()`, which hard-codes
-  `for (let i = 1; i < 4; i++)` and reads `this.plays[i].card` on undefined.
-
-- [ ] **`comp/PlayBoardComp.tsx` — crash at end of game in `makeOpponentMoveIfNeeded()`**
-  No `board.isCompleted()` guard. After the 52nd card, if the final trick is won by an opponent,
-  `getCorrectPlays(board)` runs on an empty board; the solver returns
-  `{"error": -2, "message": "Zero cards"}` (verified) and `Wasm.nextPlays` throws.
-  - Declarer mode (line ~129): triggers when E/W wins the last trick.
-  - Defense mode (lines ~123–127): triggers whenever the last winner isn't the defense player.
-  Fix: return early when `board.isCompleted()`.
 
 - [ ] **`api.php` — uncaught exceptions from `BoardRepository`**
   `save()`/`create()`/`update()` throw `RuntimeException` (duplicate PBN, missing fields,
