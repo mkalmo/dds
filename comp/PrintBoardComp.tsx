@@ -44,9 +44,9 @@ const PrintBoardComp = (props: Props) => {
             {/*    { props.exercise.tricks.map(*/}
             {/*        (trick, i) => <TrickComp key={i} trick={ trick } />)  }*/}
             {/*</div>*/}
-            {/*<footer className='footer'>*/}
-            {/*    352{props.exercise.target}8655 { props.exercise.deal.getPbn(Player.West) }*/}
-            {/*</footer>*/}
+            <footer className='footer'>
+                { props.exercise.deal.getPbn(Player.West) }
+            </footer>
         </div>);
 }
 
